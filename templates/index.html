@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ name }} — {{ title }}. Portfolio showcasing DevOps, backend engineering, and agentic AI projects.">
+  <meta name="theme-color" content="#06060b">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ site_title }}">
+  <meta property="og:description" content="{{ title }}">
+  <meta property="og:type" content="website">
+
+  <title>{{ site_title }}</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <!-- Favicon (replace with your own) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Cursor glow effect -->
+  <div id="cursor-glow"></div>
+
+  <!-- Particle canvas background -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ═══════════════════ NAVIGATION ═══════════════════ -->
+  <nav>
+    <div class="logo">~/portfolio<span class="dim">.sh</span></div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      Available for hire
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">Initializing portfolio_v3.2.0</div>
+      <h1>
+        <span class="line">I Build</span>
+        <span class="line"><span class="gradient">Resilient Systems</span></span>
+        <span class="line">& Intelligent Agents</span>
+      </h1>
+      <p class="hero-desc">
+        {{ title }} crafting scalable infrastructure, robust APIs, and
+        autonomous AI systems that think, plan, and execute.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch →</a>
+      </div>
+      <div class="hero-metrics">
+        {% for m in metrics %}
+        <div class="metric">
+          <div class="metric-value" data-target="{{ m.value }}" data-suffix="{{ m.suffix }}">0</div>
+          <div class="metric-label">{{ m.label }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Terminal decoration -->
+    <div class="hero-terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <span class="title">zsh — portfolio</span>
+      </div>
+      <div class="terminal-body" id="terminal-lines">
+        <!-- Lines injected by terminal.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ ABOUT ═══════════════════ -->
+  <section id="about">
+    <div class="section-header reveal">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Engineering at the Intersection<br>of Systems & Intelligence</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          I'm a <strong>full-stack systems engineer</strong> who lives at the intersection
+          of infrastructure, backend development, and artificial intelligence. My work
+          spans from designing Kubernetes clusters and CI/CD pipelines to building
+          high-throughput APIs and autonomous AI agents.
+        </p>
+        <p>
+          I believe in <strong>infrastructure as code</strong>, <strong>observability-first</strong>
+          design, and building AI systems that don't just respond — they <strong>reason,
+          plan, and act</strong>. Every system I build is designed to scale, self-heal,
+          and deliver measurable impact.
+        </p>
+      </div>
+      <div class="about-cards">
+        {% for card in about_cards %}
+        <div class="about-card reveal delay-{{ loop.index }}">
+          <div class="about-card-icon {{ card.theme }}">{{ card.icon }}</div>
+          <div>
+            <h4>{{ card.title }}</h4>
+            <p>{{ card.desc }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SKILLS ═══════════════════ -->
+  <section id="skills">
+    <div class="section-header reveal">
+      <div class="section-label">Tech Stack</div>
+      <h2 class="section-title">Tools & Technologies</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="skills-grid">
+      {% for group in skills %}
+      <div class="skill-group reveal delay-{{ loop.index }}">
+        <div class="skill-group-header">
+          <span class="icon">{{ group.icon }}</span>
+          {{ group.title }}
+        </div>
+        <div class="skill-tags">
+          {% for tag in group.tags %}
+          <span class="skill-tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PROJECTS ═══════════════════ -->
+  <section id="projects">
+    <div class="section-header reveal">
+      <div class="section-label">Featured Work</div>
+      <h2 class="section-title">Projects That Ship</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="projects-grid">
+      {% for proj in projects %}
+      <div class="project-card reveal">
+        <div class="project-number">{{ proj.number }}</div>
+        <h3>{{ proj.title }}</h3>
+        <p>{{ proj.desc }}</p>
+        <div class="project-tech">
+          {% for t in proj.tech %}
+          <span>{{ t }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ═══════════════════ EXPERIENCE ═══════════════════ -->
+  <section id="experience">
+    <div class="section-header reveal">
+      <div class="section-label">Career Path</div>
+      <h2 class="section-title">Experience</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="timeline">
+      {% for exp in experience %}
+      <div class="timeline-item reveal">
+        <div class="timeline-date">{{ exp.date }}</div>
+        <h3>{{ exp.role }}</h3>
+        <h4>{{ exp.company }}</h4>
+        <p>{{ exp.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CONTACT ═══════════════════ -->
+  <section id="contact">
+    <div class="section-header reveal">
+      <div class="section-label">Get in Touch</div>
+      <h2 class="section-title">Let's Build Together</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3>Have a project<br>in mind? Let's talk.</h3>
+        <p>
+          I'm always open to discussing new projects, creative ideas,
+          or opportunities to be part of something great.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:{{ email }}" class="contact-link">
+            <span class="contact-link-icon">✉️</span>
+            {{ email }}
+          </a>
+          <a href="{{ social.github }}" target="_blank" rel="noopener" class="contact-link">
+            <span class="contact-link-icon">⌨️</span>
+            {{ social.github | replace('https://', '') }}
+          </a>
+          <a href="{{ social.linkedin }}" target="_blank" rel="noopener" class="contact-link">
+            <span class="contact-link-icon">💼</span>
+            {{ social.linkedin | replace('https://', '') }}
+          </a>
+          <a href="{{ social.twitter }}" target="_blank" rel="noopener" class="contact-link">
+            <span class="contact-link-icon">🐦</span>
+            {{ social.twitter | replace('https://', '') }}
+          </a>
+        </div>
+      </div>
+
+      <form id="contact-form" class="contact-form reveal">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell me about your project..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Send Message →</button>
+        <div id="form-status" class="form-status"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <footer>
+    <span>© {{ 2026 }} {{ name }} — Crafted with code & caffeine</span>
+    <div class="footer-links">
+      <a href="{{ social.github }}" target="_blank" rel="noopener">GitHub</a>
+      <a href="{{ social.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="/api/resume">Resume</a>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+  <script src="/static/js/particles.js"></script>
+  <script src="/static/js/terminal.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script src="/static/js/contact.js"></script>
+
+</body>
+</html>

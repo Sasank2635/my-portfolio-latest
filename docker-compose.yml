@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  portfolio:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      # Mount source for live reload in development
+      - ./templates:/app/templates
+      - ./static:/app/static
+      - ./config.py:/app/config.py
+      - ./api:/app/api
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
