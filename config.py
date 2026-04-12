@@ -14,9 +14,9 @@ HOST = config("HOST", "0.0.0.0")
 PORT = int(config("PORT", 8000))
 
 # ── Personal ──────────────────────────────────────────────────
-SITE_TITLE = config("SITE_TITLE", "Portfolio — Backend · DevOps · Agentic AI")
+SITE_TITLE = config("SITE_TITLE", "Portfolio — Backend · DevOps · Data Analyst")
 YOUR_NAME = config("YOUR_NAME", "Sasanka Sekhar Upadhyaya")
-YOUR_TITLE = config("YOUR_TITLE", "Software Engineer · Backend · DevOps · Agentic AI")
+YOUR_TITLE = config("YOUR_TITLE", "Software Engineer · Backend · DevOps · Data Analyst")
 YOUR_EMAIL = config("YOUR_EMAIL", "sasanka.sekhar.upadhyaya2002@gmail.com")
 YOUR_LOCATION = config("YOUR_LOCATION", "Kolkata, India")
 
@@ -24,7 +24,7 @@ YOUR_LOCATION = config("YOUR_LOCATION", "Kolkata, India")
 SOCIAL_LINKS = {
     "github": config("GITHUB_URL", "https://github.com/yourusername"),       # TODO: replace
     "linkedin": config("LINKEDIN_URL", "https://linkedin.com/in/yourprofile"),  # TODO: replace
-    "twitter": config("TWITTER_URL", "https://twitter.com/yourhandle"),       # TODO: replace
+    "twitter": config("TWITTER_URL", "https://x.com/upadhyaya2002"),       # TODO: replace
 }
 
 # ── SMTP (Contact Form) ──────────────────────────────────────
@@ -36,7 +36,7 @@ CONTACT_RECIPIENT = config("CONTACT_RECIPIENT", YOUR_EMAIL)
 
 # ── Hero Metrics ──────────────────────────────────────────────
 METRICS = [
-    {"value": 10, "label": "Projects Shipped", "suffix": "+"},
+    {"value": 3, "label": "Projects Shipped", "suffix": "+"},
     {"value": 99, "label": "Uptime Delivered", "suffix": "%"},
     {"value": 1, "label": "Years Experience", "suffix": "+"},
 ]
@@ -56,10 +56,16 @@ ABOUT_CARDS = [
         "desc": "CI/CD pipelines, container orchestration with Docker & Kubernetes, cloud deployments on AWS & Azure",
     },
     {
-        "icon": "🤖",
-        "theme": "ai",
-        "title": "Agentic AI",
-        "desc": "Autonomous agents, multi-agent orchestration, RAG pipelines, and LLM tool-use with LangChain & LangGraph",
+        "icon": "📊",
+        "theme": "data",
+        "title": "Data Analysis",
+        "desc": "Hands-on experience in SQL, Python, and Excel for analyzing large datasets, identifying trends, and generating business insights",
+    },
+    {
+        "icon": "📈",
+        "theme": "analytics",
+        "title": "Business Analytics",
+        "desc": "KPI tracking, root cause analysis, and experiment design (A/B testing) to solve real-world business problems",
     },
 ]
 
@@ -69,8 +75,8 @@ SKILLS = [
         "icon": "⚙️",
         "title": "DevOps & Cloud",
         "tags": [
-            "Docker", "Kubernetes", "AWS", "Azure",
-            "GitHub Actions", "Jenkins", "Linux", "CI/CD",
+            "Docker", "AWS", "Azure",
+            "GitHub Actions", "Linux", "CI/CD", "Containerization"
         ],
     },
     {
@@ -83,12 +89,30 @@ SKILLS = [
         ],
     },
     {
-        "icon": "🤖",
-        "title": "AI & ML",
+        "icon": "📊",
+        "title": "Data Analysis",
         "tags": [
-            "LangChain", "LangGraph", "CrewAI", "OpenAI API",
-            "Claude API", "RAG", "ChromaDB", "Pinecone",
-            "Function Calling", "Multi-Agent Systems",
+            "SQL", "Python", "Pandas", "NumPy",
+            "Excel", "EDA", "Data Cleaning",
+            "Data Validation", "Data Visualization"
+        ],
+    },
+    {
+        "icon": "📈",
+        "title": "Analytics & Statistics",
+        "tags": [
+            "KPI Tracking", "Root Cause Analysis",
+            "A/B Testing", "Hypothesis Testing",
+            "Descriptive Statistics", "Data Interpretation"
+        ],
+    },
+    {
+        "icon": "⚙️",
+        "title": "Tools & Systems",
+        "tags": [
+            "Power BI", "Tableau", "MySQL",
+            "PostgreSQL", "REST APIs", "Git",
+            "Linux"
         ],
     },
 ]
@@ -104,20 +128,22 @@ PROJECTS = [
             "backoff for async LLM job processing. Validated under 1000+ "
             "concurrent jobs with full fault-tolerance."
         ),
-        "tech": ["Python", "FastAPI", "Redis", "RabbitMQ", "Celery", "Docker", "Kubernetes"],
+        "tech": ["Python", "FastAPI", "Redis", "RabbitMQ", "Celery", "Docker", "Linux"],
         "link": "#",
     },
     {
         "number": "02",
-        "title": "Agentic AI Task Orchestration Platform",
+        "title": "Food Delivery Analytics & Demand Optimization",
         "desc": (
-            "Autonomous multi-agent system with tool-use chains and RAG "
-            "pipeline (ChromaDB) for context-aware, domain-grounded responses. "
-            "Stateful LangGraph workflows with conditional branching, retries, "
-            "and human-in-the-loop checkpoints."
+            "End-to-end analytics project on 10K+ food delivery orders to analyze "
+            "delivery performance and demand patterns. Identified peak-hour delays "
+            "(30–40%) using SQL and Python, performed root cause analysis on order "
+            "volume and distance, and designed an A/B experiment to optimize delivery "
+            "partner allocation. Built dashboard-ready datasets and visualizations "
+            "to track KPIs like delivery time and demand trends."
         ),
-        "tech": ["Python", "LangChain", "LangGraph", "FastAPI", "ChromaDB", "OpenAI API", "Docker"],
-        "link": "#",
+        "tech": ["Python", "SQL", "Pandas", "Matplotlib", "Power BI"],
+        "link": "https://github.com/yourusername/food-delivery-analysis",
     },
     {
         "number": "03",
@@ -127,7 +153,7 @@ PROJECTS = [
             "updates, canary releases, auto-scaling, and integrated monitoring "
             "across AWS and Azure."
         ),
-        "tech": ["AWS", "Azure", "Kubernetes", "GitHub Actions", "Jenkins"],
+        "tech": ["AWS", "Azure", "Containerization", "GitHub Actions", "Linux"],
         "link": "#",
     },
 ]
@@ -143,8 +169,8 @@ EXPERIENCE = [
             "500+ documents/day. Deployed containerized services on Docker & "
             "Kubernetes. Reduced release cycles by 60% with GitHub Actions & "
             "Jenkins CI/CD. Optimized PostgreSQL queries reducing API latency "
-            "by 40%. Developed Agentic AI pipelines with LLM APIs, tool-use "
-            "chains, RAG, and multi-agent orchestration via LangChain/LangGraph."
+            "by 40%. Worked extensively with SQL and Python for data validation, analysis"
+            "and debugging across backend systems, improving data accuracy and reliability."
         ),
     },
 ]
