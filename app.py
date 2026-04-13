@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.responses import JSONResponse
 
 import config
 from api.routes import router as api_router
@@ -54,9 +55,9 @@ async def index(request: Request):
 
 
 # ── Health Check ──────────────────────────────────────────────
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
-    return {"status": "ok", "service": "portfolio"}
+    return JSONResponse(content={"status": "ok", "service": "portfolio"})
 
 
 # ── Run ───────────────────────────────────────────────────────
