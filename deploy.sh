@@ -8,7 +8,7 @@ set -euo pipefail
 APP_NAME="portfolio"
 APP_DIR="/var/www/portfolio"
 APP_USER="www-data"
-REPO_URL="https://github.com/yourusername/portfolio.git"
+REPO_URL="https://github.com/Sasank2635/portfolio.git"
 BRANCH="main"
 DOMAIN="yourdomain.com"
 PORT=8000

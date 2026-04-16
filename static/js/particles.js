@@ -41,8 +41,10 @@
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
 
-    // Adjust particle count for mobile
-    const target = width < 768 ? 50 : CONFIG.particleCount;
+    // Adjust particle count for mobile/tablet
+    const isMobile = width < 768;
+    const isTablet = width < 1100;
+    const target = isMobile ? 30 : isTablet ? 60 : CONFIG.particleCount;
     while (particles.length < target) particles.push(createParticle());
     while (particles.length > target) particles.pop();
   }
@@ -130,7 +132,9 @@
 
   // ── Events ─────────────────────────────────────────────
   window.addEventListener('resize', () => {
+    cancelAnimationFrame(animationId);
     resize();
+    loop();
   });
 
   document.addEventListener('mousemove', (e) => {

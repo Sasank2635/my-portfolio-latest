@@ -88,6 +88,34 @@
     </div>
   </section>
 
+  <!-- ═══════════════════ TICKER ═══════════════════ -->
+  <div class="ticker-strip" aria-hidden="true">
+    <div class="ticker-track">
+      <!-- First copy -->
+      <span class="ticker-item"><span class="t-accent">Backend</span> Development <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">DevOps</span> Engineering <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">Data</span> Analysis <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">Cloud</span> Infrastructure <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">FastAPI</span> &amp; Django <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">Docker</span> &amp; Kubernetes <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">PostgreSQL</span> &amp; Redis <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">CI/CD</span> Pipelines <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">Machine Learning</span> <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">System Design</span> <span class="ticker-sep">/</span></span>
+      <!-- Duplicate for seamless loop -->
+      <span class="ticker-item"><span class="t-accent">Backend</span> Development <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">DevOps</span> Engineering <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">Data</span> Analysis <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">Cloud</span> Infrastructure <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">FastAPI</span> &amp; Django <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">Docker</span> &amp; Kubernetes <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">PostgreSQL</span> &amp; Redis <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">CI/CD</span> Pipelines <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent">Machine Learning</span> <span class="ticker-sep">/</span></span>
+      <span class="ticker-item"><span class="t-accent2">System Design</span> <span class="ticker-sep">/</span></span>
+    </div>
+  </div>
+
   <!-- ═══════════════════ ABOUT ═══════════════════ -->
   <section id="about">
     <div class="section-header reveal">
@@ -153,19 +181,30 @@
       <h2 class="section-title">Projects That Ship</h2>
       <div class="section-rule"></div>
     </div>
-    <div class="projects-grid">
-      {% for proj in projects %}
-      <div class="project-card reveal">
-        <div class="project-number">{{ proj.number }}</div>
-        <h3>{{ proj.title }}</h3>
-        <p>{{ proj.desc }}</p>
-        <div class="project-tech">
-          {% for t in proj.tech %}
-          <span>{{ t }}</span>
-          {% endfor %}
+    <div class="projects-carousel">
+      <div class="projects-rail"></div>
+      <div class="projects-track" id="projects-track">
+        {% for proj in projects %}
+        <div class="project-card">
+          <div class="project-peg"></div>
+          <div class="project-card-header">
+            <div class="project-number">{{ proj.number }}</div>
+            <h3>{{ proj.title }}</h3>
+          </div>
+          <div class="project-card-body">
+            <p>{{ proj.desc }}</p>
+            <div class="project-tech">
+              {% for t in proj.tech %}
+              <span>{{ t }}</span>
+              {% endfor %}
+            </div>
+            {% if proj.link and proj.link != '#' %}
+            <a href="{{ proj.link }}" target="_blank" rel="noopener" class="project-link">View Project →</a>
+            {% endif %}
+          </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
   </section>
 

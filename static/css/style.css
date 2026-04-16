@@ -51,7 +51,8 @@ html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: var(--accent2) var(--bg-primary);
-  font-size: 16px;
+  /* Fluid base font: 13px on 320px screen → 16px on 1440px+ */
+  font-size: clamp(13px, 0.7rem + 0.5vw, 16px);
 }
 
 body {
@@ -133,8 +134,9 @@ nav.hidden { transform: translateY(-100%); }
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
   align-items: center;
+  flex-wrap: wrap;
 }
 .nav-links a {
   font-family: var(--font-mono);
@@ -190,8 +192,8 @@ nav.hidden { transform: translateY(-100%); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 3rem;
-  padding: calc(5rem + 60px) var(--section-px) 4rem;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding: calc(clamp(3rem, 5vw, 5rem) + 60px) var(--section-px) clamp(2rem, 4vw, 4rem);
 }
 .hero-content {
   max-width: 620px;
@@ -202,8 +204,8 @@ nav.hidden { transform: translateY(-100%); }
 .hero-image {
   position: relative;
   flex-shrink: 0;
-  width: 320px;
-  height: 320px;
+  width: clamp(150px, 22vw, 320px);
+  height: clamp(150px, 22vw, 320px);
   opacity: 0;
   animation: heroImageReveal 0.9s 0.8s var(--ease-out) forwards;
 }
@@ -307,7 +309,7 @@ nav.hidden { transform: translateY(-100%); }
 }
 
 .hero-desc {
-  font-size: 1.1rem;
+  font-size: clamp(0.88rem, 1.2vw, 1.1rem);
   font-weight: 400;
   color: var(--text-secondary);
   line-height: 1.85;
@@ -364,15 +366,15 @@ nav.hidden { transform: translateY(-100%); }
 /* Metrics */
 .hero-metrics {
   display: flex;
-  gap: 3.5rem;
-  margin-top: 5rem;
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  margin-top: clamp(2.5rem, 5vw, 5rem);
   opacity: 0;
   animation: slideUp 0.7s 1s var(--ease-out) forwards;
 }
 .metric { border-left: 2px solid var(--border); padding-left: 1.4rem; }
 .metric-value {
   font-family: var(--font-display);
-  font-size: 2.6rem;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
   font-weight: 700;
   color: var(--accent);
   text-shadow: var(--accent-glow);
@@ -449,6 +451,10 @@ section {
   position: relative;
   z-index: 1;
   padding: var(--section-py) var(--section-px);
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 .section-header { margin-bottom: 3.5rem; }
@@ -468,6 +474,9 @@ section {
   font-weight: 700;
   letter-spacing: -1.5px;
   line-height: 1.2;
+  display: inline-block;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px dashed rgba(124, 106, 239, 0.35);
 }
 .section-rule {
   width: 50px;
@@ -491,8 +500,8 @@ section + section::before {
    ========================================================== */
 .about-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 4rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: start;
 }
 .about-text p {
@@ -526,9 +535,11 @@ section + section::before {
   font-size: 1.2rem;
   flex-shrink: 0;
 }
-.about-card-icon.devops  { background: var(--accent-dim); }
-.about-card-icon.backend { background: var(--accent2-dim); }
-.about-card-icon.ai      { background: rgba(240,98,146,0.1); }
+.about-card-icon.devops    { background: var(--accent-dim); }
+.about-card-icon.backend   { background: var(--accent2-dim); }
+.about-card-icon.ai        { background: rgba(240,98,146,0.1); }
+.about-card-icon.data      { background: rgba(0,232,176,0.08); }
+.about-card-icon.analytics { background: rgba(124,106,239,0.08); }
 .about-card h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.25rem; }
 .about-card p  { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; }
 
@@ -537,14 +548,14 @@ section + section::before {
    ========================================================== */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: clamp(1rem, 1.5vw, 1.5rem);
 }
 .skill-group {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 2.2rem;
+  padding: clamp(1.2rem, 2vw, 2.2rem);
   transition: all 0.4s var(--ease-out);
   position: relative;
   overflow: hidden;
@@ -597,21 +608,183 @@ section + section::before {
 }
 
 /* ==========================================================
-   PROJECTS
+   PROJECTS — Full-Height Card Carousel
    ========================================================== */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+
+/* Break project section out of max-width constraint */
+#projects {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
 }
+#projects .section-header {
+  padding: 0 var(--section-px);
+  margin-bottom: 2.5rem;
+}
+
+.projects-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Rail wire — runs through the peg holes at top of each card */
+/* top: 14px = 28px track padding-top minus 14px peg half-height */
+.projects-rail {
+  position: absolute;
+  top: 14px;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--accent2) 4%,
+    var(--accent2) 96%,
+    transparent 100%
+  );
+  z-index: 2; /* behind pegs (z-index 10) so wire looks threaded through */
+  pointer-events: none;
+}
+/* Anchor knobs at each end of the wire */
+.projects-rail::before,
+.projects-rail::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(124,106,239,0.5);
+}
+.projects-rail::before { left: 2rem; }
+.projects-rail::after  { right: 2rem; }
+
+.projects-track {
+  display: flex;
+  gap: clamp(1rem, 1.8vw, 1.8rem);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 28px var(--section-px) 2rem; /* 28px top so pegs have room to poke above */
+  cursor: grab;
+}
+.projects-track:active,
+.projects-track.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+/* Thin accent scrollbar */
+.projects-track::-webkit-scrollbar { height: 3px; }
+.projects-track::-webkit-scrollbar-track { background: var(--bg-secondary); }
+.projects-track::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
+
+/* ── Card ── */
 .project-card {
+  flex: 0 0 clamp(320px, 48vw, 560px);
+  min-height: clamp(460px, 68vh, 640px);
+  scroll-snap-align: start;
+  /* Solid bg — no backdrop-filter (kills performance with multiple cards) */
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 2.4rem;
-  transition: all 0.5s var(--ease-out);
+  border-radius: 14px;
+  overflow: visible; /* allow peg ring to poke above card top */
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
   position: relative;
-  overflow: hidden;
+  will-change: transform;
+}
+.project-card:hover {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 1px var(--accent2), 0 30px 60px rgba(0,0,0,0.6);
+}
+
+/* Card header — dark block where the rail wire passes through */
+.project-card-header {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  border-radius: 14px 14px 0 0; /* match card radius now that overflow:visible */
+  padding: clamp(1.2rem, 2vw, 1.8rem) clamp(1.2rem, 2.5vw, 2rem);
+  padding-top: clamp(1.6rem, 2.5vw, 2rem); /* extra top so content clears the peg */
+  flex-shrink: 0;
+  position: relative;
+  z-index: 3;
+  overflow: hidden; /* clip the ::after bar within header */
+  transition: border-left-color 0.4s;
+}
+.project-card:hover .project-card-header {
+  border-left-color: var(--accent);
+}
+
+/* ── Peg / Hole — ring that the wire threads through ── */
+.project-peg {
+  position: absolute;
+  top: -14px;       /* protrudes 14px above card top — rail is at this center */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2.5px solid var(--accent2);
+  box-shadow:
+    0 0 10px rgba(124,106,239,0.8),
+    0 0 22px rgba(124,106,239,0.3),
+    inset 0 0 6px rgba(0,0,0,0.9);
+  z-index: 10;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+/* Inner dark hole */
+.project-peg::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+}
+/* Glint highlight */
+.project-peg::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 7px;
+  width: 5px; height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+}
+.project-card:hover .project-peg {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 14px rgba(0,232,176,0.8),
+    0 0 28px rgba(0,232,176,0.3),
+    inset 0 0 6px rgba(0,0,0,0.9);
+}
+
+/* Top gradient accent line on hover (replaces expensive radial-gradient mouse track) */
+.project-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+  z-index: 5;
+}
+.project-card:hover::after { transform: scaleX(1); }
+
+/* Card body — scrollable content */
+.project-card-body {
+  flex: 1;
+  padding: clamp(1.2rem, 2.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 .project-card::before {
   content: '';
@@ -630,29 +803,31 @@ section + section::before {
 }
 
 .project-number {
-  font-family: var(--font-display);
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: var(--bg-elevated);
-  line-height: 1;
-  margin-bottom: 0.8rem;
-  transition: color 0.4s;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--accent2);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
 }
-.project-card:hover .project-number { color: var(--accent2); }
+.project-number::before { content: '// '; color: var(--text-muted); }
 
 .project-card h3 {
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 0.7rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
 }
 .project-card p {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: var(--text-secondary);
-  line-height: 1.75;
+  line-height: 1.8;
   margin-bottom: 1.3rem;
+  flex: 1;
 }
-.project-tech { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.project-tech { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.5rem; }
 .project-tech span {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -663,6 +838,23 @@ section + section::before {
   border-radius: 3px;
   color: var(--accent2);
 }
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  border-top: 1px dashed var(--border);
+  padding-top: 1rem;
+  width: 100%;
+  transition: color 0.3s;
+}
+.project-link:hover { color: var(--accent2); }
 
 /* ==========================================================
    EXPERIENCE TIMELINE
@@ -721,12 +913,12 @@ section + section::before {
    ========================================================== */
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(2rem, 4vw, 4rem);
 }
 .contact-info h3 {
   font-family: var(--font-display);
-  font-size: 2.1rem;
+  font-size: clamp(1.4rem, 2.5vw, 2.1rem);
   font-weight: 700;
   letter-spacing: -0.5px;
   margin-bottom: 1.2rem;
@@ -768,7 +960,7 @@ section + section::before {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 2.2rem;
+  padding: clamp(1.2rem, 2vw, 2.2rem);
 }
 .form-group { margin-bottom: 1.3rem; }
 .form-group label {
@@ -802,7 +994,9 @@ section + section::before {
 .form-group textarea { min-height: 110px; resize: vertical; }
 
 .btn-submit {
-  composes: btn;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 600;
@@ -847,6 +1041,48 @@ section + section::before {
   background: rgba(240,98,146,0.08);
   color: var(--accent3);
   border: 1px solid rgba(240,98,146,0.15);
+}
+
+/* ==========================================================
+   TICKER STRIP
+   ========================================================== */
+.ticker-strip {
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--accent2);
+  border-bottom: 1px solid var(--accent2);
+  padding: 0.9rem 0;
+  position: relative;
+  z-index: 1;
+}
+.ticker-track {
+  display: inline-flex;
+  animation: tickerScroll 28s linear infinite;
+  will-change: transform;
+}
+.ticker-strip:hover .ticker-track {
+  animation-play-state: paused;
+}
+.ticker-item {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0 1.8rem;
+}
+.ticker-item .t-accent  { color: var(--accent); }
+.ticker-item .t-accent2 { color: var(--accent2); }
+.ticker-sep {
+  color: var(--accent2);
+  opacity: 0.5;
+  padding: 0 0.4rem;
+}
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* ==========================================================
@@ -902,48 +1138,48 @@ footer span {
 .reveal.delay-3 { transition-delay: 0.3s; }
 
 /* ==========================================================
-   RESPONSIVE
+   RESPONSIVE — structural flips only; sizes are fluid via clamp()
    ========================================================== */
+
+/* ── Hide terminal on smaller screens ── */
 @media (max-width: 1100px) {
   .hero-terminal { display: none; }
 }
-@media (max-width: 900px) {
+
+/* ── Hero: stack vertically when viewport is too narrow for side-by-side ── */
+@media (max-width: 750px) {
   .hero {
     flex-direction: column;
     text-align: center;
-    gap: 2.5rem;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: calc(3.5rem + 60px);
   }
-  .hero-content {
-    max-width: 100%;
-  }
-  .hero-image {
-    width: 240px;
-    height: 240px;
-    order: -1; /* Image appears above text on mobile */
-  }
-  .hero-desc {
-    max-width: 100%;
-  }
-  .hero-actions {
-    justify-content: center;
-  }
-  .hero-metrics {
-    justify-content: center;
-  }
-  .skills-grid       { grid-template-columns: 1fr; }
-  .projects-grid     { grid-template-columns: 1fr; }
-  .about-grid        { grid-template-columns: 1fr; }
-  .contact-grid      { grid-template-columns: 1fr; }
-  .hero-metrics      { gap: 2rem; flex-wrap: wrap; }
+  .hero-content        { max-width: 100%; }
+  .hero-image          { order: -1; }
+  .hero-desc           { margin-left: auto; margin-right: auto; }
+  .hero-actions        { justify-content: center; flex-direction: column; align-items: center; width: 100%; }
+  .hero-actions .btn   { width: 100%; justify-content: center; }
+  .hero-metrics        { justify-content: center; flex-wrap: wrap; }
 }
+
+/* ── Nav: hide status indicator on narrow screens ── */
 @media (max-width: 600px) {
-  nav .nav-links     { gap: 1rem; }
-  nav .nav-links a   { font-size: 0.62rem; letter-spacing: 1px; }
-  nav .nav-status    { display: none; }
-  .hero h1           { font-size: 2.3rem; letter-spacing: -1px; }
-  .hero-image {
-    width: 200px;
-    height: 200px;
-  }
+  nav .nav-status { display: none; }
+  nav .nav-links a { letter-spacing: 1px; }
+}
+
+/* ── Footer: stack on small screens ── */
+@media (max-width: 500px) {
   footer             { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-links      { justify-content: center; flex-wrap: wrap; }
+}
+
+/* ── Touch devices — disable hover transforms ── */
+@media (hover: none) {
+  .about-card:hover   { transform: none; box-shadow: none; }
+  .project-card:hover { transform: none; box-shadow: none; }
+  .skill-group:hover  { transform: none; box-shadow: none; }
+  .skill-tag:hover    { transform: none; }
+  .btn-primary:hover  { transform: none; }
+  .btn-submit:hover   { transform: none; }
 }

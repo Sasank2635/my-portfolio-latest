@@ -4,12 +4,15 @@
  * project card mouse tracking.
  */
 
+const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
+
 document.addEventListener('DOMContentLoaded', () => {
-  initCursorGlow();
+  if (!isTouchDevice()) initCursorGlow();
   initScrollReveal();
   initCounterAnimation();
   initNavAutoHide();
-  initProjectCardMouseTrack();
+  // initProjectCardMouseTrack(); — removed (radial-gradient on mousemove causes repaints)
+  initCarouselDrag();
 });
 
 /* ── Cursor Glow ────────────────────────────────────────── */
@@ -111,6 +114,52 @@ function initNavAutoHide() {
       ticking = false;
     });
   });
+}
+
+/* ── Project Carousel Drag-to-Scroll ────────────────────── */
+function initCarouselDrag() {
+  const track = document.getElementById('projects-track');
+  if (!track) return;
+
+  let isDown = false;
+  let startX, scrollLeft;
+  let hasDragged = false;
+
+  track.addEventListener('mousedown', (e) => {
+    isDown = true;
+    hasDragged = false;
+    track.classList.add('dragging');
+    startX = e.pageX - track.offsetLeft;
+    scrollLeft = track.scrollLeft;
+  });
+
+  track.addEventListener('mouseleave', () => {
+    isDown = false;
+    track.classList.remove('dragging');
+  });
+
+  track.addEventListener('mouseup', () => {
+    isDown = false;
+    track.classList.remove('dragging');
+  });
+
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    if (Math.abs(walk) > 5) hasDragged = true;
+    track.scrollLeft = scrollLeft - walk;
+  });
+
+  // Prevent link clicks firing after a drag
+  track.addEventListener('click', (e) => {
+    if (hasDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+      hasDragged = false;
+    }
+  }, true);
 }
 
 /* ── Project Card Mouse Tracking (radial highlight) ─────── */
