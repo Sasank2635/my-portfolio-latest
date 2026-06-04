@@ -32,7 +32,7 @@ app.include_router(api_router, prefix="/api")
 
 
 # ── Pages ─────────────────────────────────────────────────────
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def index(request: Request):
     """Render the main portfolio page."""
     return templates.TemplateResponse(
