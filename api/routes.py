@@ -5,12 +5,15 @@ Handles the contact form submission with validation and
 optional SMTP email delivery.
 """
 
+import asyncio
 import logging
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, EmailStr, Field
 
 import config
@@ -41,39 +44,50 @@ async def contact(data: ContactRequest):
     - Sends an email via SMTP (if configured)
     - Falls back to logging if SMTP is not set up
     """
-    try:
-        # Build email
-        subject = f"Portfolio Contact: {data.name}"
-        body = (
-            f"New message from your portfolio contact form\n"
-            f"{'=' * 50}\n\n"
-            f"Name:    {data.name}\n"
-            f"Email:   {data.email}\n"
-            f"Date:    {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n\n"
-            f"Message:\n{data.message}\n"
-        )
+    # Build the email body
+    subject = f"Portfolio Contact: {data.name}"
+    body = (
+        f"New message from your portfolio contact form\n"
+        f"{'=' * 50}\n\n"
+        f"Name:    {data.name}\n"
+        f"Email:   {data.email}\n"
+        f"Date:    {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n\n"
+        f"Message:\n{data.message}\n"
+    )
 
-        # Try sending via SMTP if credentials are configured
-        if config.SMTP_USER and config.SMTP_PASSWORD:
-            await _send_email(subject, body, data.email)
-            logger.info(f"Contact email sent from {data.email}")
-        else:
-            # No SMTP configured — log the message instead
-            logger.info(
-                f"Contact form submission (SMTP not configured):\n{body}"
-            )
+    # Always log the submission first so a message is never lost even if
+    # SMTP is broken or unreachable.
+    logger.info(f"Contact form submission from {data.email} ({data.name})")
+    logger.info(f"Message body:\n{body}")
 
-        return ContactResponse(
-            success=True,
-            message="Message sent successfully! I'll get back to you soon.",
-        )
+    # Fire-and-forget the SMTP send with a hard 6-second timeout. The user
+    # gets an instant success response on a slow / wrong / unreachable mail
+    # server — we just lose the delivery, not the message itself (it's in
+    # the log).
+    if config.SMTP_USER and config.SMTP_PASSWORD:
+        async def _send_with_timeout():
+            try:
+                await asyncio.wait_for(
+                    _send_email(subject, body, data.email),
+                    timeout=6.0,
+                )
+                logger.info(f"Email delivered for {data.email}")
+            except asyncio.TimeoutError:
+                logger.error(
+                    f"SMTP send timed out (>6s) for {data.email}. "
+                    f"Check SMTP_HOST / SMTP_PORT / network reachability."
+                )
+            except Exception as exc:
+                logger.error(f"SMTP send failed for {data.email}: {exc!r}")
 
-    except Exception as e:
-        logger.error(f"Contact form error: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail="Failed to send message. Please try again later.",
-        )
+        asyncio.create_task(_send_with_timeout())
+    else:
+        logger.info("SMTP not configured — message saved to server log only.")
+
+    return ContactResponse(
+        success=True,
+        message="Message sent successfully! I'll get back to you soon.",
+    )
 
 
 async def _send_email(subject: str, body: str, reply_to: str):
@@ -99,9 +113,6 @@ async def _send_email(subject: str, body: str, reply_to: str):
 
 
 # ── Resume (view-only, inline) ───────────────────────────────
-from pathlib import Path
-from fastapi.responses import FileResponse
-
 RESUME_PATH = (
     Path(__file__).resolve().parent.parent
     / "static" / "resume"

@@ -1766,14 +1766,98 @@ body {
 .resume-modal-stage {
   position: absolute;
   inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* PDF.js renders pages stacked vertically; centre them and pad. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 16px 32px;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--accent2) var(--bg-primary);
+  scrollbar-width: thin;
 }
-.resume-modal-stage iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: var(--bg-primary);
-  /* Slight inset shadow so the PDF feels mounted inside the frame */
-  box-shadow: inset 0 0 60px rgba(0,0,0,0.4);
+.resume-modal-stage::-webkit-scrollbar { width: 8px; }
+.resume-modal-stage::-webkit-scrollbar-track { background: var(--bg-primary); }
+.resume-modal-stage::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent2), var(--accent));
+  border-radius: 4px;
+}
+
+/* Each rendered PDF page — feels like a real document mounted on the stage */
+.resume-page {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(34,211,238,0.18),
+    0 0 32px rgba(29,140,240,0.18);
+  background: #ffffff;
+  /* Block right-click "Save image as..." on the canvas */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: auto;
+  animation: resumePageIn 0.5s var(--ease-out) both;
+}
+@keyframes resumePageIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Loading + error states share the same chassis */
+.resume-status {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  text-align: center;
+}
+.resume-status-pulse {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(34,211,238,0.25);
+  border-top-color: var(--accent2);
+  animation: resumeSpin 0.9s linear infinite;
+}
+@keyframes resumeSpin { to { transform: rotate(360deg); } }
+
+.resume-status-error {
+  color: var(--accent3);
+  gap: 1.4rem;
+}
+.resume-status-fallback {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--accent2);
+  padding: 0.7rem 1.2rem;
+  border: 1px solid var(--accent2);
+  border-radius: 4px;
+  transition: all 0.3s var(--ease-out);
+}
+.resume-status-fallback:hover {
+  background: rgba(34,211,238,0.08);
+  box-shadow: 0 0 20px rgba(34,211,238,0.3);
+}
+
+/* On reduced motion: skip the page-in animation + spinner */
+@media (prefers-reduced-motion: reduce) {
+  .resume-page { animation: none; }
+  .resume-status-pulse { animation: none; border-top-color: var(--accent2); }
 }
 
 /* Bottom bar — small label + faint blueprint grid strip */
@@ -1803,16 +1887,152 @@ body {
   border-radius: 2px;
 }
 
-/* Mobile — full-bleed with simpler chrome */
+/* ── Resume modal: tablet (721 – 1100) ────────────────────── */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .resume-modal-frame {
+    width: min(94vw, 920px);
+    height: min(90vh, 1100px);
+  }
+  .rm-corner { width: 24px; height: 24px; }
+  .resume-modal-title { font-size: 0.9rem; }
+}
+
+/* ── Resume modal: portrait phone (≤ 720) ─────────────────── */
 @media (max-width: 720px) {
   .resume-modal { padding: 0; }
   .resume-modal-frame {
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport — accounts for mobile browser chrome */
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid rgba(34,211,238,0.35);
+    border-bottom: 1px solid rgba(34,211,238,0.35);
+    box-shadow:
+      0 0 60px rgba(29,140,240,0.18),
+      inset 0 0 0 1px rgba(34,211,238,0.18);
+  }
+  /* Keep two thin aurora corner accents — bottom only — for brand consistency */
+  .rm-corner-tl, .rm-corner-tr { display: none; }
+  .rm-corner-bl, .rm-corner-br {
+    width: 22px; height: 22px;
     border-radius: 0;
   }
-  .rm-corner { display: none; }
-  .resume-modal-title { display: none; } /* title is redundant with meta on small screens */
+
+  .resume-modal-title { display: none; } /* meta + close already enough on a phone */
+
+  /* Compact bar with bigger touch targets + safe-area top inset for notches */
+  .resume-modal-bar {
+    padding: 0.7rem 0.9rem;
+    padding-top: max(0.7rem, env(safe-area-inset-top));
+  }
+  .resume-modal-meta { font-size: 0.6rem; letter-spacing: 1.5px; }
+  .resume-modal-close {
+    width: 44px;
+    height: 44px;
+    font-size: 1.7rem;
+  }
+
+  .resume-modal-foot {
+    padding: 0.5rem 0.9rem;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  .rm-foot-label { font-size: 0.55rem; letter-spacing: 1.5px; }
+  .rm-foot-label::before { content: 'TAP X TO CLOSE · '; }
+
+  .resume-modal-stage iframe { box-shadow: none; }
+}
+
+/* ── Resume modal: landscape phone (short height) ─────────── */
+@media (max-width: 920px) and (orientation: landscape) and (max-height: 520px) {
+  .resume-modal-bar  { padding: 0.45rem 0.9rem; }
+  .resume-modal-meta { font-size: 0.55rem; }
+  .resume-modal-foot { display: none; }
+  .resume-modal-close { width: 38px; height: 38px; }
+}
+
+/* ── Very small phones (≤ 380) ────────────────────────────── */
+@media (max-width: 380px) {
+  .resume-modal-meta { font-size: 0.55rem; }
+  .resume-modal-bar  { padding: 0.6rem 0.7rem; }
+  .rm-foot-label::before { content: ''; }
+}
+
+/* ── Hero / page polish on small phones ───────────────────── */
+@media (max-width: 480px) {
+  /* Hero metrics → 2-column grid (was wrapping awkwardly) */
+  .hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1.5rem;
+    margin-top: 2.2rem;
+  }
+  /* Contact link → bigger thumb target */
+  .contact-link {
+    padding: 0.95rem 1rem;
+    min-height: 52px;
+  }
+  /* Section title size */
+  .section-title { font-size: clamp(1.5rem, 5.5vw, 2rem); }
+}
+
+/* ── Tablet portrait tightening (721–1024) ────────────────── */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .skills-grid    { grid-template-columns: repeat(2, 1fr); }
+  .about-grid     { grid-template-columns: 1fr; }
+  .contact-grid   { grid-template-columns: 1fr; }
+}
+
+/* ── Tap-highlight in Aurora (default is muddy grey) ─────── */
+html {
+  -webkit-tap-highlight-color: rgba(34,211,238,0.18);
+}
+
+/* ── Touch: instant tactile press on key buttons ──────────── */
+@media (hover: none) {
+  .btn-primary:active,
+  .btn-ghost:active,
+  .btn-resume:active,
+  .btn-submit:active,
+  .resume-modal-close:active,
+  .skip-link:active {
+    transform: scale(0.97);
+    transition: transform 0.1s var(--ease-out);
+  }
+  /* On touch devices, hover-driven magnetic / spotlight effects are
+     already disabled in JS — but make sure the cursor never shows */
+  .resume-modal-backdrop { cursor: default; }
+}
+
+/* ── Safe-area-insets for notched / rounded-corner phones ─── */
+@supports (padding: max(0px)) {
+  nav {
+    padding-left: max(var(--section-px), env(safe-area-inset-left));
+    padding-right: max(var(--section-px), env(safe-area-inset-right));
+  }
+  footer {
+    padding-left: max(var(--section-px), env(safe-area-inset-left));
+    padding-right: max(var(--section-px), env(safe-area-inset-right));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+  section {
+    padding-left: max(var(--section-px), env(safe-area-inset-left));
+    padding-right: max(var(--section-px), env(safe-area-inset-right));
+  }
+}
+
+/* ── Ultrawide laptops / desktops (≥ 1440) ────────────────── */
+@media (min-width: 1440px) {
+  .hero { max-width: 1500px; margin-left: auto; margin-right: auto; }
+  .resume-modal-frame {
+    width: min(1180px, 78vw);
+  }
+}
+
+/* ── Very tall portraits — let modal breathe ──────────────── */
+@media (min-width: 721px) and (min-height: 1000px) {
+  .resume-modal-frame { height: min(95vh, 1400px); }
 }
 
 /* Reduced motion — skip the scale-in */
