@@ -10,8 +10,10 @@ import logging
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, EmailStr, Field
 
 import config
@@ -111,9 +113,6 @@ async def _send_email(subject: str, body: str, reply_to: str):
 
 
 # ── Resume (view-only, inline) ───────────────────────────────
-from pathlib import Path
-from fastapi.responses import FileResponse
-
 RESUME_PATH = (
     Path(__file__).resolve().parent.parent
     / "static" / "resume"

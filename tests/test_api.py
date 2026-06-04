@@ -4,7 +4,6 @@ tests/test_api.py — Tests for portfolio API endpoints.
 Run with: pytest tests/ -v
 """
 
-import pytest
 from fastapi.testclient import TestClient
 
 from app import app
