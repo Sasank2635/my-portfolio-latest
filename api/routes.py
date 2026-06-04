@@ -98,14 +98,36 @@ async def _send_email(subject: str, body: str, reply_to: str):
     )
 
 
-# ── Resume Download (optional) ───────────────────────────────
+# ── Resume (view-only, inline) ───────────────────────────────
+from pathlib import Path
+from fastapi.responses import FileResponse
+
+RESUME_PATH = (
+    Path(__file__).resolve().parent.parent
+    / "static" / "resume"
+    / "Sasanka_Sekhar_Upadhyaya_Software_Engineer_Resume.pdf"
+)
+
+
 @router.get("/resume")
 async def resume():
     """
-    Return resume metadata or redirect to a file.
-    Replace with actual file serving if needed.
+    Serve the resume PDF inline (view, not download).
+
+    The browser's PDF plugin still surfaces its own download button — that
+    cannot be fully suppressed without rendering the PDF to canvas via JS.
+    Setting Content-Disposition: inline at least defaults the behaviour to
+    "open in viewer" rather than "save dialog".
     """
-    return {
-        "message": "Resume endpoint — configure with your resume file.",
-        "hint": "Place resume.pdf in static/images/ and serve via StaticFiles.",
-    }
+    if not RESUME_PATH.exists():
+        raise HTTPException(status_code=404, detail="Resume not found.")
+
+    return FileResponse(
+        path=str(RESUME_PATH),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": 'inline; filename="resume.pdf"',
+            "Cache-Control": "public, max-age=3600",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
