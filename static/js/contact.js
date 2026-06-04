@@ -15,50 +15,83 @@
   const statusEl = document.getElementById('form-status');
   const originalBtnText = submitBtn.textContent;
 
+  let isSubmitting = false;
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    // Dismiss the soft keyboard on Android/iOS so the user actually sees
+    // the status message that appears below the button.
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
 
     // Gather data
-    const name = form.querySelector('[name="name"]').value.trim();
-    const email = form.querySelector('[name="email"]').value.trim();
+    const name    = form.querySelector('[name="name"]').value.trim();
+    const email   = form.querySelector('[name="email"]').value.trim();
     const message = form.querySelector('[name="message"]').value.trim();
 
-    // Basic client-side validation
+    // Client-side validation
     if (!name || !email || !message) {
       showStatus('error', 'Please fill in all fields.');
       return;
     }
-
+    if (name.length < 2) {
+      showStatus('error', 'Name must be at least 2 characters.');
+      return;
+    }
     if (message.length < 10) {
-      showStatus('error', 'Message must be at least 10 characters.');
+      showStatus('error', `Message must be at least 10 characters (currently ${message.length}).`);
       return;
     }
 
-    // Submit
+    // Submit state
+    isSubmitting = true;
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    submitBtn.textContent = 'Sending…';
     hideStatus();
+
+    // 12-second timeout so the button doesn't hang forever on a stalled connection
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 12000);
 
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ name, email, message }),
+        signal: controller.signal,
+        cache: 'no-store',
       });
 
-      const data = await res.json();
+      clearTimeout(timeoutId);
 
-      if (res.ok && data.success) {
-        showStatus('success', data.message);
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        // Non-JSON response (proxy error page, etc.)
+      }
+
+      if (res.ok && data && data.success) {
+        showStatus('success', data.message || 'Message sent successfully.');
         launchEnvelope(submitBtn);
         form.reset();
       } else {
-        showStatus('error', data.detail || data.message || 'Something went wrong.');
+        const msg = (data && (data.detail || data.message)) ||
+                    `Server returned ${res.status}. Please try again.`;
+        showStatus('error', msg);
       }
     } catch (err) {
-      console.error('Contact form error:', err);
-      showStatus('error', 'Network error. Please try again.');
+      clearTimeout(timeoutId);
+      if (err && err.name === 'AbortError') {
+        showStatus('error', 'Request timed out. Check your connection and try again.');
+      } else {
+        showStatus('error', 'Network error. Check your connection and try again.');
+      }
     } finally {
+      isSubmitting = false;
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText;
     }
@@ -67,6 +100,15 @@
   function showStatus(type, msg) {
     statusEl.textContent = msg;
     statusEl.className = 'form-status ' + type;
+    // Make sure the message is visible — on Android the keyboard often
+    // covers anything below the submit button without this scroll.
+    requestAnimationFrame(() => {
+      try {
+        statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (_) {
+        statusEl.scrollIntoView();
+      }
+    });
   }
 
   function hideStatus() {
