@@ -7,29 +7,37 @@
 /* ── Imports ─────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── CSS Variables ───────────────────────────────────────── */
+/* ── CSS Variables — Koenigsegg Aurora Blue edition ───────── */
 :root {
-  /* Surface */
-  --bg-primary:    #06060b;
-  --bg-secondary:  #0c0c14;
-  --bg-surface:    #11111c;
-  --bg-elevated:   #181828;
-  --border:        #1c1c32;
-  --border-hover:  #2a2a48;
+  /* Surface — deep midnight with a hint of blue, like carbon under cold lights */
+  --bg-primary:    #06080d;
+  --bg-secondary:  #0a0d14;
+  --bg-surface:    #0e1018;
+  --bg-elevated:   #141822;
+  --border:        #1a2030;
+  --border-hover:  #2a3550;
 
-  /* Text */
-  --text-primary:  #e8e8f0;
-  --text-secondary:#8888a8;
-  --text-muted:    #50506a;
+  /* Text — ghost white through brushed steel.
+     Body text lifted from #a0b0c8 → #c8d4e3 for higher legibility; the prior
+     value collapsed into the Aurora accent and made the page read greyish.
+     Muted also lifted so labels/footnotes remain readable without competing. */
+  --text-primary:  #f4f7fc;
+  --text-secondary:#c8d4e3;
+  --text-muted:    #7e8ca3;
 
-  /* Accents */
-  --accent:        #00e8b0;
-  --accent-dim:    rgba(0,232,176,0.15);
-  --accent-glow:   0 0 24px rgba(0,232,176,0.35);
-  --accent2:       #7c6aef;
-  --accent2-dim:   rgba(124,106,239,0.12);
-  --accent2-glow:  0 0 24px rgba(124,106,239,0.3);
-  --accent3:       #f06292;
+  /* Accents — VIVID Horizon Blue + electric cyan. No more muddy navy. */
+  --accent:        #1d8cf0;
+  --accent-dim:    rgba(29,140,240,0.22);
+  --accent-glow:   0 0 32px rgba(29,140,240,0.55);
+  --accent2:       #22d3ee;
+  --accent2-dim:   rgba(34,211,238,0.18);
+  --accent2-glow:  0 0 28px rgba(34,211,238,0.5);
+  --accent3:       #f59e0b;
+
+  /* Koenigsegg signature tokens */
+  --steel:         #6b7891;
+  --ghost:         #f7faff;
+  --carbon-line:   rgba(255,255,255,0.03);
 
   /* Fonts */
   --font-mono:     'IBM Plex Mono', monospace;
@@ -1182,4 +1190,975 @@ footer span {
   .skill-tag:hover    { transform: none; }
   .btn-primary:hover  { transform: none; }
   .btn-submit:hover   { transform: none; }
+}
+
+/* ==========================================================
+   ░░  COSMIC POLISH LAYER
+   Deep-space backdrop, orbital ring on hero, GPU-smooth motion,
+   reduced-motion + mobile optimizations. Appended last so it
+   wins specificity ties cleanly.
+   ========================================================== */
+
+/* ── Deep-space nebula backdrop ─────────────────────────────
+   Three soft radial glows layered behind everything. Pure CSS,
+   no extra DOM. Sits beneath the particle canvas (which is z:0). */
+body {
+  background:
+    radial-gradient(ellipse 70% 55% at 18% 12%,  rgba(124,106,239,0.13) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 82% 78%,  rgba(0,232,176,0.09)   0%, transparent 62%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgba(240,98,146,0.07)  0%, transparent 65%),
+    var(--bg-primary);
+  background-attachment: fixed;
+}
+
+/* Push particle canvas behind nebula glows but ahead of solid bg.
+   Drop it slightly so nebula reads as deeper space. */
+#particles-canvas {
+  z-index: 0;
+  opacity: 0.95;
+}
+
+/* Soft vignette to focus the eye on content */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.35) 100%);
+}
+
+/* Make sure content sits above the vignette */
+nav, section, footer, .ticker-strip, #cursor-glow { z-index: 2; }
+nav { z-index: 100; }
+#cursor-glow { z-index: 9997; }
+
+/* ── Cursor glow: cosmic dual-tone, GPU-only transform ──── */
+#cursor-glow {
+  background:
+    radial-gradient(circle, rgba(0,232,176,0.07) 0%, transparent 55%),
+    radial-gradient(circle, rgba(124,106,239,0.05) 0%, transparent 70%);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+/* ── Orbital ring around hero image ───────────────────────
+   Two slow counter-rotating rings, single comet dot orbiting. */
+.hero-image {
+  /* Give the ring breathing room without resizing the image */
+  isolation: isolate;
+}
+.hero-image::before { z-index: 0; }
+.hero-image::after  { z-index: 0; }
+
+.hero-image img {
+  position: relative;
+  z-index: 3;
+}
+
+/* Outer orbit (slow, dashed) */
+.hero-image > .orbit,
+.hero-image .orbit {
+  position: absolute;
+  inset: -28px;
+  border-radius: 50%;
+  border: 1px dashed rgba(124,106,239,0.35);
+  z-index: 1;
+  pointer-events: none;
+  animation: orbitSpin 36s linear infinite;
+}
+.hero-image .orbit-inner {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,232,176,0.18);
+  z-index: 1;
+  pointer-events: none;
+  animation: orbitSpinReverse 24s linear infinite;
+}
+/* Comet dot riding the outer orbit */
+.hero-image .orbit::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 50%;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent), 0 0 28px rgba(0,232,176,0.5);
+  transform: translateX(-50%);
+}
+
+@keyframes orbitSpin        { to { transform: rotate(360deg); } }
+@keyframes orbitSpinReverse { to { transform: rotate(-360deg); } }
+
+/* Soft halo behind the avatar that breathes */
+.hero-image > .halo,
+.hero-image .halo {
+  position: absolute;
+  inset: -45px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,106,239,0.18) 0%, transparent 60%);
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(8px);
+  animation: haloPulse 6s ease-in-out infinite;
+}
+@keyframes haloPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.95; transform: scale(1.06); }
+}
+
+/* ── Section title: cosmic underline upgrade ────────────── */
+.section-title {
+  position: relative;
+}
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0,232,176,0.6) 25%,
+    rgba(124,106,239,0.6) 75%,
+    transparent 100%);
+  filter: blur(0.3px);
+  opacity: 0.7;
+}
+
+/* ── Card hover refinement — smoother, GPU-only ───────── */
+.about-card,
+.skill-group,
+.project-card,
+.contact-link,
+.skill-tag,
+.btn,
+.btn-submit {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Add a soft inner highlight on hover for the "in a beam of starlight" feel */
+.skill-group::before,
+.about-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(140% 80% at 50% -10%, rgba(255,255,255,0.04), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.skill-group, .about-card { position: relative; overflow: hidden; }
+.skill-group:hover::before,
+.about-card:hover::before { opacity: 1; }
+
+/* ── Scroll perf: keep offscreen sections cheap ────────── */
+section { content-visibility: auto; contain-intrinsic-size: 800px; }
+
+/* ── Smoothness: scrollbar styling ─────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent2), var(--accent));
+  border-radius: 4px;
+}
+
+/* ── Mobile: dial back heavy effects for buttery scrolling ─ */
+@media (max-width: 768px) {
+  /* Nebula is the most expensive paint on mobile — slim it */
+  body {
+    background:
+      radial-gradient(ellipse 90% 50% at 50% 0%,  rgba(124,106,239,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 90% 50% at 50% 100%, rgba(0,232,176,0.07)  0%, transparent 65%),
+      var(--bg-primary);
+    background-attachment: scroll; /* fixed is jank on iOS */
+  }
+  /* Soften shadows that cost a lot on low-power GPUs */
+  .skill-group:hover,
+  .project-card:hover,
+  .about-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+
+  /* Backdrop blur in nav is heavy; reduce strength */
+  nav {
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  }
+
+  /* Disable cursor glow on touch */
+  #cursor-glow { display: none; }
+
+  /* Shrink the orbital ring so it doesn't overflow narrow screens */
+  .hero-image .orbit       { inset: -16px; }
+  .hero-image .orbit-inner { inset: -8px; }
+  .hero-image .halo        { inset: -22px; }
+
+  /* Vignette is wasted paint on small screens */
+  body::after { display: none; }
+}
+
+/* ── Coarse pointers: kill orbit comet (looks off without a mouse) ── */
+@media (pointer: coarse) {
+  .hero-image .orbit::before { display: none; }
+}
+
+/* ==========================================================
+   ░░  KOENIGSEGG AURORA LAYER
+   Replaces the cosmic nebula with a Koenigsegg-edition surface:
+   carbon-fiber weave overlay, blueprint precision grid, Tegel
+   diamond accent, and aurora-blue glow ambiance. Sits after the
+   cosmic block so the overrides win cleanly.
+   ========================================================== */
+
+/* Override body backdrop — deep midnight, two cool glows, no nebula */
+body {
+  background:
+    radial-gradient(ellipse 65% 50% at 20% 8%,  rgba(43,108,176,0.18) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(111,195,223,0.08) 0%, transparent 65%),
+    var(--bg-primary);
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Carbon-fiber weave overlay — extremely subtle, just a hint of material */
+body::before {
+  background-image:
+    /* original grain noise */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* diagonal carbon weave */
+    linear-gradient(45deg,  rgba(255,255,255,0.018) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.018) 50%, rgba(255,255,255,0.018) 75%, transparent 75%, transparent),
+    linear-gradient(-45deg, rgba(0,0,0,0.18) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.18) 50%, rgba(0,0,0,0.18) 75%, transparent 75%, transparent);
+  background-size: 256px 256px, 6px 6px, 6px 6px;
+  opacity: 0.45;
+}
+
+/* Blueprint precision grid — extremely faint, only visible against dark areas */
+body {
+  background-image:
+    radial-gradient(ellipse 65% 50% at 20% 8%,  rgba(43,108,176,0.18) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(111,195,223,0.08) 0%, transparent 65%),
+    linear-gradient(rgba(111,195,223,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111,195,223,0.04) 1px, transparent 1px);
+  background-size: auto, auto, 80px 80px, 80px 80px;
+  background-color: var(--bg-primary);
+}
+
+/* Tegel diamond — Swedish heritage accent in section labels */
+.section-label::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 12px;
+  margin-bottom: 1px;
+  background: var(--accent2);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px rgba(111,195,223,0.5);
+  vertical-align: middle;
+}
+
+/* Section title underline — re-tinted aurora */
+.section-title::after {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(43,108,176,0.7) 25%,
+    rgba(111,195,223,0.7) 75%,
+    transparent 100%);
+}
+
+/* Status dot — colder pulse */
+.status-dot {
+  box-shadow: 0 0 12px rgba(111,195,223,0.6);
+}
+
+/* Hero h1 gradient line — aurora sweep */
+.hero h1 .gradient {
+  background: linear-gradient(110deg, var(--accent2) 0%, var(--ghost) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Hero stat numbers — speedometer styling */
+.metric-value {
+  color: var(--ghost);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1.2px;
+  text-shadow: 0 0 18px rgba(111,195,223,0.35);
+}
+.metric { border-left-color: var(--accent2); }
+
+/* Primary button — Aurora ingot */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  color: var(--ghost);
+  box-shadow: 0 0 28px rgba(43,108,176,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-primary:hover {
+  box-shadow: 0 0 42px rgba(111,195,223,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* Ghost-outline button — brushed steel border */
+.btn-ghost {
+  border-color: var(--steel);
+  color: var(--ghost);
+}
+.btn-ghost:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  background: rgba(111,195,223,0.05);
+}
+
+/* Submit button — aurora gradient ingot */
+.btn-submit {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--ghost);
+}
+.btn-submit:hover {
+  box-shadow: 0 0 40px rgba(43,108,176,0.35), 0 0 40px rgba(111,195,223,0.25);
+}
+
+/* Ticker strip — brushed-steel band with aurora separators */
+.ticker-strip {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
+  border-color: rgba(43,108,176,0.5);
+}
+.ticker-item .t-accent  { color: var(--accent2); }
+.ticker-item .t-accent2 { color: var(--ghost); }
+.ticker-sep { color: var(--accent2); }
+
+/* Project rail — aurora wire */
+.projects-rail {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--accent) 4%,
+    var(--accent2) 50%,
+    var(--accent) 96%,
+    transparent 100%);
+}
+.projects-rail::before,
+.projects-rail::after {
+  background: var(--accent2);
+  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(111,195,223,0.5);
+}
+.project-peg { border-color: var(--accent2); }
+.project-card:hover .project-peg {
+  border-color: var(--accent);
+  box-shadow: 0 0 14px rgba(43,108,176,0.8), 0 0 28px rgba(111,195,223,0.3), inset 0 0 6px rgba(0,0,0,0.9);
+}
+
+/* Cursor glow — aurora pair */
+#cursor-glow {
+  background:
+    radial-gradient(circle, rgba(43,108,176,0.08)  0%, transparent 55%),
+    radial-gradient(circle, rgba(111,195,223,0.06) 0%, transparent 70%);
+}
+
+/* Hero orbital ring — keep but switch to aurora */
+.hero-image .orbit       { border-color: rgba(111,195,223,0.4); }
+.hero-image .orbit-inner { border-color: rgba(43,108,176,0.3); }
+.hero-image .orbit::before {
+  background: var(--accent2);
+  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(111,195,223,0.5);
+}
+.hero-image .halo {
+  background: radial-gradient(circle, rgba(43,108,176,0.22) 0%, transparent 60%);
+}
+
+/* Hero image corner accents — aurora pair */
+.hero-image::before {
+  border-top-color: var(--accent2);
+  border-right-color: var(--accent2);
+  box-shadow: 4px -4px 20px rgba(111,195,223,0.18);
+}
+.hero-image::after {
+  border-bottom-color: var(--accent);
+  border-left-color: var(--accent);
+  box-shadow: -4px 4px 20px rgba(43,108,176,0.18);
+}
+
+/* Timeline accent — aurora */
+.timeline::before {
+  background: linear-gradient(180deg, var(--accent2), var(--accent), transparent);
+}
+.timeline-item::before {
+  background: var(--accent2);
+  box-shadow: 0 0 14px rgba(111,195,223,0.6);
+}
+
+/* Logo — ghost white with cyan dim */
+.logo { color: var(--ghost); text-shadow: 0 0 18px rgba(111,195,223,0.35); }
+.logo .dim { color: var(--accent); }
+
+/* Nav links hover — aurora */
+.nav-links a:hover { color: var(--accent2); }
+.nav-links a::after {
+  background: var(--accent2);
+  box-shadow: 0 0 14px rgba(111,195,223,0.5);
+}
+
+/* Nav status — cold blue */
+.nav-status { color: var(--accent2); }
+
+/* Form focus — aurora ring */
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 3px rgba(111,195,223,0.18);
+}
+
+/* ==========================================================
+   ░░  RESUME VIEWER MODAL
+   Aurora-framed fullscreen viewer. Hidden by default, lifts in
+   with a cinematic scale + blur. Close via ESC, backdrop, or X.
+   ========================================================== */
+.resume-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-out), visibility 0s linear 0.35s;
+}
+.resume-modal.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.35s var(--ease-out), visibility 0s linear 0s;
+}
+
+.resume-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(29,140,240,0.18), transparent 70%),
+    rgba(6,8,13,0.78);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  cursor: pointer;
+}
+
+.resume-modal-frame {
+  position: relative;
+  width: min(1100px, 100%);
+  height: min(92vh, 1200px);
+  background:
+    linear-gradient(180deg, rgba(34,211,238,0.04), transparent 30%),
+    var(--bg-surface);
+  border: 1px solid var(--accent2);
+  border-radius: 14px;
+  box-shadow:
+    0 60px 120px rgba(0,0,0,0.65),
+    0 0 0 1px rgba(34,211,238,0.15),
+    0 0 80px rgba(29,140,240,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.94) translateY(20px);
+  opacity: 0;
+  transition: transform 0.45s var(--ease-spring), opacity 0.35s var(--ease-out);
+}
+.resume-modal.is-open .resume-modal-frame {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Aurora corner brackets — hypercar precision marks at each corner */
+.rm-corner {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+  z-index: 2;
+}
+.rm-corner-tl { top: -1px;    left: -1px;    border-top:    2px solid var(--accent2); border-left:   2px solid var(--accent2); border-top-left-radius: 14px; }
+.rm-corner-tr { top: -1px;    right: -1px;   border-top:    2px solid var(--accent);  border-right:  2px solid var(--accent);  border-top-right-radius: 14px; }
+.rm-corner-bl { bottom: -1px; left: -1px;    border-bottom: 2px solid var(--accent);  border-left:   2px solid var(--accent);  border-bottom-left-radius: 14px; }
+.rm-corner-br { bottom: -1px; right: -1px;   border-bottom: 2px solid var(--accent2); border-right:  2px solid var(--accent2); border-bottom-right-radius: 14px; }
+.rm-corner-tl, .rm-corner-tr, .rm-corner-bl, .rm-corner-br {
+  box-shadow: 0 0 18px rgba(34,211,238,0.45);
+}
+
+/* Top bar — title row with live-dot, name, close X */
+.resume-modal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.4rem;
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-surface));
+  border-bottom: 1px solid rgba(34,211,238,0.2);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.resume-modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  white-space: nowrap;
+}
+.rm-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 10px rgba(34,211,238,0.8);
+  animation: statusPulse 2.5s infinite;
+}
+.rm-label::before { content: '// '; color: var(--text-muted); }
+
+.resume-modal-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resume-modal-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  flex-shrink: 0;
+}
+.resume-modal-close:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  background: rgba(34,211,238,0.08);
+  box-shadow: 0 0 18px rgba(34,211,238,0.3);
+  transform: rotate(90deg);
+}
+
+/* Body — stage that hosts the PDF iframe */
+.resume-modal-body {
+  flex: 1;
+  position: relative;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+.resume-modal-stage {
+  position: absolute;
+  inset: 0;
+}
+.resume-modal-stage iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: var(--bg-primary);
+  /* Slight inset shadow so the PDF feels mounted inside the frame */
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.4);
+}
+
+/* Bottom bar — small label + faint blueprint grid strip */
+.resume-modal-foot {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.55rem 1.4rem;
+  background: linear-gradient(0deg, var(--bg-elevated), var(--bg-surface));
+  border-top: 1px solid rgba(34,211,238,0.2);
+  flex-shrink: 0;
+}
+.rm-foot-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.rm-foot-grid {
+  flex: 1;
+  height: 10px;
+  background-image: linear-gradient(90deg, var(--accent2) 1px, transparent 1px);
+  background-size: 12px 100%;
+  opacity: 0.18;
+  border-radius: 2px;
+}
+
+/* Mobile — full-bleed with simpler chrome */
+@media (max-width: 720px) {
+  .resume-modal { padding: 0; }
+  .resume-modal-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+  .rm-corner { display: none; }
+  .resume-modal-title { display: none; } /* title is redundant with meta on small screens */
+}
+
+/* Reduced motion — skip the scale-in */
+@media (prefers-reduced-motion: reduce) {
+  .resume-modal-frame,
+  .resume-modal {
+    transition: none !important;
+  }
+  .resume-modal-frame {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================
+   ░░  PROFESSIONAL POLISH PASS
+   Selection, focus rings, skip-link, B&W portrait treatment,
+   resume CTA button, testimonial section, log-style terminal.
+   ========================================================== */
+
+/* Aurora text-selection */
+::selection {
+  background: rgba(34,211,238,0.35);
+  color: var(--ghost);
+  text-shadow: 0 0 12px rgba(34,211,238,0.6);
+}
+::-moz-selection {
+  background: rgba(34,211,238,0.35);
+  color: var(--ghost);
+}
+
+/* Keyboard focus — visible Aurora ring, hidden for mouse users */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent2);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px rgba(34,211,238,0.18);
+  transition: outline-offset 0.15s var(--ease-out);
+}
+
+/* Skip-to-content link — visible only when focused */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.7rem 1.1rem;
+  background: var(--accent2);
+  color: var(--bg-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: top 0.25s var(--ease-out);
+}
+.skip-link:focus-visible {
+  top: 1rem;
+  outline-offset: 2px;
+}
+
+/* B&W / low-saturation portrait treatment — reads more "senior" than a flat colour photo */
+.hero-image img {
+  filter: grayscale(0.55) contrast(1.05) brightness(0.95);
+  transition: filter 0.6s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  /* Soft edge fade — masks the photo's hard edge into the background */
+  -webkit-mask-image: radial-gradient(ellipse 110% 110% at 50% 45%, #000 60%, transparent 100%);
+          mask-image: radial-gradient(ellipse 110% 110% at 50% 45%, #000 60%, transparent 100%);
+}
+.hero-image:hover img {
+  filter: grayscale(0.15) contrast(1.05) brightness(1);
+}
+
+/* Resume CTA — distinct from primary so the three buttons read as three modes */
+.btn-resume {
+  background: transparent;
+  color: var(--accent2);
+  border: 1px solid var(--accent2);
+  box-shadow: inset 0 0 0 0 rgba(34,211,238,0.15);
+  transition: all 0.35s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+.btn-resume:hover {
+  background: rgba(34,211,238,0.08);
+  box-shadow: inset 0 0 0 100px rgba(34,211,238,0.06), 0 0 28px rgba(34,211,238,0.25);
+}
+
+/* ── Testimonial section ─────────────────────────────────── */
+#testimonial .section-header { margin-bottom: 2.2rem; }
+
+.testimonial {
+  max-width: 760px;
+  margin: 0 auto;
+  position: relative;
+  padding: clamp(2rem, 4vw, 3.2rem) clamp(1.6rem, 3vw, 2.8rem);
+  background:
+    linear-gradient(135deg, rgba(34,211,238,0.04), rgba(29,140,240,0.02)),
+    var(--bg-surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  border-radius: 12px;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.testimonial-mark {
+  position: absolute;
+  top: -28px;
+  left: 28px;
+  font-family: var(--font-display);
+  font-size: 9rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent2);
+  opacity: 0.18;
+  pointer-events: none;
+  user-select: none;
+}
+.testimonial blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--text-primary);
+  font-style: italic;
+  margin: 0 0 1.4rem 0;
+}
+.testimonial figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+}
+.testimonial-name {
+  color: var(--accent2);
+  font-weight: 600;
+}
+.testimonial-role {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ==========================================================
+   ░░  AOK-STYLE INTERACTION POLISH
+   Card-hover spotlight on every card type, magnetic-button
+   GPU prep, smoother cursor glow positioning, extended
+   reveal stagger delays.
+   ========================================================== */
+
+/* Cursor glow is now positioned purely via JS-set translate3d.
+   Disable the older left/top + transform combo so JS controls fully. */
+#cursor-glow {
+  left: 0;
+  top:  0;
+  transform: translate3d(-9999px, -9999px, 0) translate(-50%, -50%);
+}
+
+/* Magnetic buttons need transform-origin for clean motion + GPU prep */
+.btn-primary, .btn-ghost, .btn-submit {
+  transform-origin: center center;
+}
+
+/* Card spotlight — a soft radial highlight following the cursor.
+   project-card already had this via --mouse-x/y; extend to skill-group,
+   about-card, timeline-item using the same --mx/--my pattern. */
+
+.skill-group { position: relative; overflow: hidden; }
+.skill-group .__sg {} /* placeholder anchor */
+.skill-group {
+  --mx: 50%; --my: 50%;
+}
+.skill-group::before {
+  /* Override the soft-top highlight from earlier with a mouse-tracking spotlight */
+  background:
+    radial-gradient(420px circle at var(--mx) var(--my), rgba(34,211,238,0.08), transparent 55%);
+}
+
+.about-card { position: relative; overflow: hidden; }
+.about-card { --mx: 50%; --my: 50%; }
+.about-card::before {
+  background:
+    radial-gradient(360px circle at var(--mx) var(--my), rgba(34,211,238,0.06), transparent 55%);
+}
+
+/* project-card already uses --mouse-x / --mouse-y — re-tint to Aurora cyan */
+.project-card::before {
+  background:
+    radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    rgba(34,211,238,0.06), transparent 50%);
+}
+
+/* timeline-item gets a subtle accent following the cursor too */
+.timeline-item { position: relative; --mx: 50%; --my: 50%; }
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(300px circle at var(--mx) var(--my), rgba(34,211,238,0.05), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.timeline-item:hover::after { opacity: 1; }
+
+/* Extended reveal stagger — supports cards/items 4-8 without re-coding */
+.reveal.delay-4 { transition-delay: 0.4s; }
+.reveal.delay-5 { transition-delay: 0.5s; }
+.reveal.delay-6 { transition-delay: 0.6s; }
+.reveal.delay-7 { transition-delay: 0.7s; }
+.reveal.delay-8 { transition-delay: 0.8s; }
+
+/* Smoother reveal — softer easing + slightly longer duration for sophistication */
+.reveal {
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================
+   ░░  MAIL LAUNCH ANIMATION
+   Fires after a successful contact form submit. The envelope
+   sits over the form's center, then lifts toward the stars
+   with a gentle sway, leaving a short sparkle trail.
+   ========================================================== */
+.mail-launch-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 9996;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mail-envelope {
+  position: absolute;
+  left: var(--mx, 50%);
+  top:  var(--my, 70%);
+  width: 180px;
+  height: 84px;
+  margin-left: -90px;
+  margin-top:  -42px;
+  filter: drop-shadow(0 14px 30px rgba(29,140,240,0.45))
+          drop-shadow(0 0 24px rgba(34,211,238,0.4));
+  transform-origin: 50% 60%;
+  animation:
+    mailLiftOff 2.8s cubic-bezier(0.4, 0.05, 0.5, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.mail-envelope svg { width: 100%; height: 100%; display: block; }
+
+/* Rear thrust — horizontal exhaust streak trailing the car */
+.mail-flame {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  width: 78px;
+  height: 18px;
+  margin-top: -9px;
+  margin-left: 0;
+  transform-origin: 100% 50%;
+  background:
+    radial-gradient(ellipse 32% 60% at 95% 50%, rgba(255,255,255,0.95) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 85% 50%, rgba(200,235,255,0.9) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 80% at 70% 50%, rgba(34,211,238,0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 90% at 50% 50%, rgba(29,140,240,0.75) 0%, transparent 75%),
+    linear-gradient(90deg, transparent 0%, rgba(29,140,240,0.0) 100%);
+  border-radius: 50% 60% 60% 50% / 50% 50% 50% 50%;
+  filter: blur(1px);
+  opacity: 0.95;
+  animation: flameFlicker 0.1s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes flameFlicker {
+  0%   { transform: scaleX(0.92) scaleY(0.85); opacity: 0.8; }
+  100% { transform: scaleX(1.12) scaleY(1.05); opacity: 1; }
+}
+
+@keyframes mailLiftOff {
+  /* Materialize at launch position */
+  0%   { transform: translate(0, 0)       scale(0.9)  rotate(0deg); opacity: 0; }
+  6%   { transform: translate(0, 0)       scale(1)    rotate(0deg); opacity: 1; }
+  /* Brief engine rev — slight tail squat, no rotation */
+  12%  { transform: translate(-4px, 0)    scale(1.02) rotate(0deg); opacity: 1; }
+  18%  { transform: translate(0, 0)       scale(1)    rotate(0deg); opacity: 1; }
+
+  /* Straight-line acceleration to the right — only a hair of upward drift
+     (perspective vanishing point), zero rotation. */
+  35%  { transform: translate(20vw, -1vh) scale(0.85) rotate(0deg); opacity: 1; }
+  55%  { transform: translate(45vw, -2vh) scale(0.6)  rotate(0deg); opacity: 1; }
+  75%  { transform: translate(68vw, -3vh) scale(0.32) rotate(0deg); opacity: 0.75; }
+
+  /* Vanishing point — shrinks straight ahead */
+  92%  { transform: translate(82vw, -4vh) scale(0.1)  rotate(0deg); opacity: 0.35; }
+  100% { transform: translate(92vw, -5vh) scale(0.02) rotate(0deg); opacity: 0; }
+}
+
+/* Trailing sparkles */
+.mail-spark {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  left: var(--sx, 50%);
+  top:  var(--sy, 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(111,195,223,0.6) 60%, transparent 80%);
+  box-shadow: 0 0 12px rgba(111,195,223,0.7);
+  opacity: 0;
+  animation: mailSparkle 1.6s ease-out forwards;
+  animation-delay: var(--sd, 0s);
+}
+@keyframes mailSparkle {
+  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(var(--sxOff, 0px), calc(var(--syOff, -120px))) scale(0); opacity: 0; }
+}
+
+/* Success message: stamp it with a subtle pop instead of plain show */
+.form-status.success { animation: statusPop 0.45s var(--ease-spring); }
+@keyframes statusPop {
+  from { transform: translateY(-6px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Honour reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .mail-envelope, .mail-spark { animation: none !important; opacity: 0 !important; }
+}
+
+/* ── Reduced motion: neutralize loops, keep static beauty ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-image .orbit,
+  .hero-image .orbit-inner,
+  .hero-image .halo,
+  .ticker-track,
+  .status-dot { animation: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
 }

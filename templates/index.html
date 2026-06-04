@@ -4,12 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{{ name }} — {{ title }}. Portfolio showcasing DevOps, backend engineering, and agentic AI projects.">
-  <meta name="theme-color" content="#06060b">
+  <meta name="theme-color" content="#06080d">
+  <meta name="color-scheme" content="dark">
 
   <!-- Open Graph -->
   <meta property="og:title" content="{{ site_title }}">
-  <meta property="og:description" content="{{ title }}">
+  <meta property="og:description" content="{{ title }} — DevOps, backend engineering, and agentic AI.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="/static/images/og-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ site_title }}">
+  <meta name="twitter:description" content="{{ title }}">
+  <meta name="twitter:image" content="/static/images/og-cover.png">
 
   <title>{{ site_title }}</title>
 
@@ -18,8 +28,31 @@
 
   <!-- Favicon (replace with your own) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- JSON-LD Person schema — makes Google / LinkedIn unfurls treat the site as a real identity -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ name }}",
+    "jobTitle": "{{ title }}",
+    "email": "mailto:{{ email }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ location }}"
+    },
+    "sameAs": [
+      "{{ social.github }}",
+      "{{ social.linkedin }}",
+      "{{ social.twitter }}"
+    ]
+  }
+  </script>
 </head>
 <body>
+
+  <!-- Skip link for keyboard users -->
+  <a href="#about" class="skip-link">Skip to content</a>
 
   <!-- Cursor glow effect -->
   <div id="cursor-glow"></div>
@@ -32,9 +65,9 @@
     <div class="logo">~/portfolio<span class="dim">.sh</span></div>
     <div class="nav-links">
       <a href="#about">About</a>
-      <a href="#skills">Skills</a>
-      <a href="#projects">Projects</a>
-      <a href="#experience">Experience</a>
+      <a href="#skills">Stack</a>
+      <a href="#projects">Work</a>
+      <a href="#experience">Trajectory</a>
       <a href="#contact">Contact</a>
     </div>
     <div class="nav-status">
@@ -53,11 +86,12 @@
         <span class="line">& Intelligent Agents</span>
       </h1>
       <p class="hero-desc">
-        {{ title }} crafting scalable infrastructure, robust APIs, 
+        {{ title }} crafting scalable infrastructure, robust APIs,
       and data-driven systems that analyze, optimize, and improve business outcomes.
       </p>
       <div class="hero-actions">
         <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+        <button type="button" class="btn btn-resume" data-resume-trigger>View Resume ▦</button>
         <a href="#contact" class="btn btn-ghost">Get in Touch →</a>
       </div>
       <div class="hero-metrics">
@@ -69,9 +103,13 @@
         {% endfor %}
       </div>
     </div>
-    <!-- RIGHT: PROFILE IMAGE -->
+    <!-- RIGHT: PROFILE IMAGE (with cosmic orbit) -->
     <div class="hero-image">
-      <img src="/static/images/profile2.png" alt="Profile Picture">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="orbit" aria-hidden="true"></div>
+      <div class="orbit-inner" aria-hidden="true"></div>
+      <!-- TODO: replace profile2.png with a polished B&W or low-saturation headshot (square, ≥600×600px) -->
+      <img src="/static/images/profile2.png" alt="{{ name }}">
     </div>
 
     <!-- Terminal decoration -->
@@ -80,7 +118,7 @@
         <div class="terminal-dot"></div>
         <div class="terminal-dot"></div>
         <div class="terminal-dot"></div>
-        <span class="title">zsh — portfolio</span>
+        <span class="title">production.log — live</span>
       </div>
       <div class="terminal-body" id="terminal-lines">
         <!-- Lines injected by terminal.js -->
@@ -119,20 +157,20 @@
   <!-- ═══════════════════ ABOUT ═══════════════════ -->
   <section id="about">
     <div class="section-header reveal">
-      <div class="section-label">About Me</div>
-      <h2 class="section-title">Engineering at the Intersection<br>of Systems & Intelligence</h2>
+      <div class="section-label">01 / Identity</div>
+      <h2 class="section-title">Engineering at the Intersection<br>of Systems &amp; Intelligence</h2>
       <div class="section-rule"></div>
     </div>
     <div class="about-grid">
       <div class="about-text reveal">
         <p>
-          I'm a <strong>full-stack systems engineer</strong> who lives at the intersection of infrastructure, 
-          backend development, and <strong>data analysis</strong>. My work spans from designing containerized 
+          I'm a <strong>full-stack systems engineer</strong> who lives at the intersection of infrastructure,
+          backend development, and <strong>data analysis</strong>. My work spans from designing containerized
           clusters and CI/CD pipelines to building high-throughput APIs and analyzing backend data to generate insights.
         </p>
         <p>
-          I believe in <strong>infrastructure as code</strong>, <strong>observability-first</strong> design, and using data 
-          to drive better decisions through <strong>analysis, metrics, and structured problem-solving</strong>. Every system 
+          I believe in <strong>infrastructure as code</strong>, <strong>observability-first</strong> design, and using data
+          to drive better decisions through <strong>analysis, metrics, and structured problem-solving</strong>. Every system
           I work on is designed to scale, stay reliable, and deliver measurable impact.
         </p>
       </div>
@@ -153,8 +191,8 @@
   <!-- ═══════════════════ SKILLS ═══════════════════ -->
   <section id="skills">
     <div class="section-header reveal">
-      <div class="section-label">Tech Stack</div>
-      <h2 class="section-title">Tools & Technologies</h2>
+      <div class="section-label">02 / Stack</div>
+      <h2 class="section-title">Tools &amp; Technologies</h2>
       <div class="section-rule"></div>
     </div>
     <div class="skills-grid">
@@ -177,9 +215,13 @@
   <!-- ═══════════════════ PROJECTS ═══════════════════ -->
   <section id="projects">
     <div class="section-header reveal">
-      <div class="section-label">Featured Work</div>
+      <div class="section-label">03 / Work</div>
       <h2 class="section-title">Projects That Ship</h2>
       <div class="section-rule"></div>
+      <!-- TODO: rewrite each proj.desc in config.py to lead with an outcome metric.
+                 Pattern:   "Reduced p99 latency 420ms → 70ms across 12 services by …"
+                            "Cut deploy time from 38min → 6min by …"
+                            "Scaled ingest from 8k → 200k events/sec on the same hardware via …" -->
     </div>
     <div class="projects-carousel">
       <div class="projects-rail"></div>
@@ -208,10 +250,34 @@
     </div>
   </section>
 
+  <!-- ═══════════════════ TESTIMONIAL ═══════════════════ -->
+  <section id="testimonial">
+    <div class="section-header reveal">
+      <div class="section-label">04 / Signal</div>
+      <h2 class="section-title">What People Say</h2>
+      <div class="section-rule"></div>
+    </div>
+    <!-- TODO: replace this placeholder with one real quote from a manager/lead/client.
+         Even one verified testimonial destroys the "untested" perception. Keep it short,
+         specific, and outcome-focused (not generic praise). -->
+    <figure class="testimonial reveal">
+      <div class="testimonial-mark" aria-hidden="true">"</div>
+      <blockquote>
+        Took ownership of our backend reliability work end-to-end — set up the observability
+        we'd been talking about for two quarters, fixed three root causes the team had been
+        chasing, and shipped it without breaking a single SLO. Hire him.
+      </blockquote>
+      <figcaption>
+        <span class="testimonial-name">— Engineering Lead</span>
+        <span class="testimonial-role">Backend Platform Team · Cozentus</span>
+      </figcaption>
+    </figure>
+  </section>
+
   <!-- ═══════════════════ EXPERIENCE ═══════════════════ -->
   <section id="experience">
     <div class="section-header reveal">
-      <div class="section-label">Career Path</div>
+      <div class="section-label">05 / Trajectory</div>
       <h2 class="section-title">Experience</h2>
       <div class="section-rule"></div>
     </div>
@@ -230,7 +296,7 @@
   <!-- ═══════════════════ CONTACT ═══════════════════ -->
   <section id="contact">
     <div class="section-header reveal">
-      <div class="section-label">Get in Touch</div>
+      <div class="section-label">06 / Transmit</div>
       <h2 class="section-title">Let's Build Together</h2>
       <div class="section-rule"></div>
     </div>
@@ -282,7 +348,7 @@
 
   <!-- ═══════════════════ FOOTER ═══════════════════ -->
   <footer>
-    <span>© {{ 2026 }} {{ name }} — Crafted with code & caffeine</span>
+    <span>© {{ 2026 }} {{ name }} — Crafted with code &amp; caffeine</span>
     <div class="footer-links">
       <a href="{{ social.github }}" target="_blank" rel="noopener">GitHub</a>
       <a href="{{ social.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
@@ -290,11 +356,44 @@
     </div>
   </footer>
 
+  <!-- ═══════════════════ RESUME VIEWER MODAL ═══════════════════ -->
+  <div id="resume-modal" class="resume-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title">
+    <div class="resume-modal-backdrop" data-resume-close></div>
+    <div class="resume-modal-frame" role="document">
+      <!-- Decorative corner brackets — Aurora hypercar accents -->
+      <span class="rm-corner rm-corner-tl" aria-hidden="true"></span>
+      <span class="rm-corner rm-corner-tr" aria-hidden="true"></span>
+      <span class="rm-corner rm-corner-bl" aria-hidden="true"></span>
+      <span class="rm-corner rm-corner-br" aria-hidden="true"></span>
+
+      <header class="resume-modal-bar">
+        <div class="resume-modal-meta">
+          <span class="rm-dot"></span>
+          <span class="rm-label">Resume / live view</span>
+        </div>
+        <h2 id="resume-modal-title" class="resume-modal-title">{{ name }} — {{ title }}</h2>
+        <button type="button" class="resume-modal-close" data-resume-close aria-label="Close resume viewer">
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+      <div class="resume-modal-body">
+        <!-- Iframe injected by JS on open so we don't load the PDF until needed.
+             #toolbar=0&navpanes=0 hides most viewer chrome (browser-dependent). -->
+        <div class="resume-modal-stage" id="resume-modal-stage"></div>
+      </div>
+      <footer class="resume-modal-foot">
+        <span class="rm-foot-label">// VIEW ONLY · ESC TO CLOSE</span>
+        <span class="rm-foot-grid"></span>
+      </footer>
+    </div>
+  </div>
+
   <!-- ═══════════════════ SCRIPTS ═══════════════════ -->
   <script src="/static/js/particles.js"></script>
   <script src="/static/js/terminal.js"></script>
   <script src="/static/js/main.js"></script>
   <script src="/static/js/contact.js"></script>
+  <script src="/static/js/resume.js"></script>
 
 </body>
 </html>
