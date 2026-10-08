@@ -5,6 +5,8 @@ All personal data, project info, skills, and experience live here.
 Edit this file (or override via .env) to customize your portfolio.
 """
 
+from datetime import date
+
 from decouple import config
 
 
@@ -34,11 +36,31 @@ SMTP_USER = config("SMTP_USER", "")
 SMTP_PASSWORD = config("SMTP_PASSWORD", "")
 CONTACT_RECIPIENT = config("CONTACT_RECIPIENT", YOUR_EMAIL)
 
+# ── Tenure (auto-computed) ────────────────────────────────────
+# Single source of truth for current-role tenure. The hero metric and the
+# experience timeline both derive their "years" from this start date, so they
+# update automatically as time passes — no manual edits needed.
+CURRENT_ROLE_START = date(2024, 10, 1)
+
+
+def years_since(start: date, today: date | None = None) -> float:
+    """Years elapsed from `start` to `today`, rounded to one decimal."""
+    today = today or date.today()
+    return round((today - start).days / 365.25, 1)
+
+
+def format_years(years: float) -> str:
+    """Drop the trailing '.0' for whole years ('2.0' → '2', '1.5' → '1.5')."""
+    return str(int(years)) if years == int(years) else str(years)
+
+
+YEARS_EXPERIENCE = format_years(years_since(CURRENT_ROLE_START))
+
 # ── Hero Metrics ──────────────────────────────────────────────
 METRICS = [
     {"value": 4, "label": "Projects Shipped", "suffix": "+"},
     {"value": 99, "label": "Uptime Delivered", "suffix": "%"},
-    {"value": 1, "label": "Years Experience", "suffix": "+"},
+    {"value": YEARS_EXPERIENCE, "label": "Years Experience", "suffix": "+"},
 ]
 
 # ── About Cards ───────────────────────────────────────────────
@@ -174,7 +196,7 @@ PROJECTS = [
 # ── Experience ────────────────────────────────────────────────
 EXPERIENCE = [
     {
-        "date": "Oct 2024 — Present",
+        "date": f"Oct 2024 — Present · {YEARS_EXPERIENCE} yrs",
         "role": "Software Engineer",
         "company": "Cozentus Technologies Pvt. Ltd. — Bhubaneswar",
         "desc": (
