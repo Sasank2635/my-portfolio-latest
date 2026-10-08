@@ -7,9 +7,9 @@ optional SMTP email delivery.
 
 import asyncio
 import logging
-from datetime import datetime
-from email.mime.text import MIMEText
+from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
@@ -51,7 +51,7 @@ async def contact(data: ContactRequest):
         f"{'=' * 50}\n\n"
         f"Name:    {data.name}\n"
         f"Email:   {data.email}\n"
-        f"Date:    {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n\n"
+        f"Date:    {datetime.now(tz=timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n\n"
         f"Message:\n{data.message}\n"
     )
 
@@ -77,7 +77,7 @@ async def contact(data: ContactRequest):
                     f"SMTP send timed out (>6s) for {data.email}. "
                     f"Check SMTP_HOST / SMTP_PORT / network reachability."
                 )
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 — background task must not die silently on any SMTP error
                 logger.error(f"SMTP send failed for {data.email}: {exc!r}")
 
         asyncio.create_task(_send_with_timeout())

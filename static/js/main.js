@@ -165,7 +165,10 @@ function initCounterAnimation() {
         if (!entry.isIntersecting) return;
 
         const el = entry.target;
-        const target = parseInt(el.dataset.target, 10);
+        const raw = el.dataset.target || '0';
+        const target = parseFloat(raw);
+        // Preserve decimal precision from the source value (e.g. "1.5" → 1).
+        const decimals = (raw.split('.')[1] || '').length;
         const suffix = el.dataset.suffix || '';
         const duration = 1800; // longer = more sophisticated pacing
         const startTime = performance.now();
@@ -174,11 +177,11 @@ function initCounterAnimation() {
           const progress = Math.min((now - startTime) / duration, 1);
           // Ease-out quart — slows down more luxuriously than cubic
           const eased = 1 - Math.pow(1 - progress, 4);
-          el.textContent = Math.floor(eased * target) + suffix;
+          el.textContent = (eased * target).toFixed(decimals) + suffix;
           if (progress < 1) {
             requestAnimationFrame(step);
           } else {
-            el.textContent = target + suffix; // pin final value
+            el.textContent = target.toFixed(decimals) + suffix; // pin final value
           }
         }
 
