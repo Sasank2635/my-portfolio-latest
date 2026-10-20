@@ -34,6 +34,13 @@
   --accent2-glow:  0 0 28px rgba(34,211,238,0.5);
   --accent3:       #f59e0b;
 
+  /* Purple — lifted from the Figma portfolio design (radial #320F85 → #763CAC) */
+  --purple:        #763cac;
+  --purple-deep:   #320f85;
+  --purple-dim:    rgba(118,60,172,0.30);
+  --purple-soft:   rgba(118,60,172,0.12);
+  --purple-glow:   0 0 34px rgba(118,60,172,0.55);
+
   /* Koenigsegg signature tokens */
   --steel:         #6b7891;
   --ghost:         #f7faff;
@@ -2365,6 +2372,155 @@ html {
   .mail-envelope, .mail-spark { animation: none !important; opacity: 0 !important; }
 }
 
+/* ═══════════════════ SKILLS ORBIT (Figma-inspired) ═══════════════════ */
+.skills-orbit {
+  position: relative;
+  width: min(560px, 86vw);
+  height: min(560px, 86vw);
+  margin: 3.5rem auto 1rem;
+}
+
+/* Decorative concentric rings — dashed so slow rotation reads as motion */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed var(--purple-dim);
+  animation: orbit-spin 60s linear infinite;
+}
+.orbit-ring-1 { inset: 0%; }
+.orbit-ring-2 { inset: 18%; border-color: rgba(118,60,172,0.22); animation-duration: 46s; animation-direction: reverse; }
+.orbit-ring-3 { inset: 36%; border-color: rgba(118,60,172,0.16); animation-duration: 34s; }
+
+/* Central glowing hub — the signature radial purple from the design */
+.orbit-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: clamp(88px, 20%, 128px);
+  height: clamp(88px, 20%, 128px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, var(--purple) 0%, var(--purple-deep) 72%);
+  box-shadow: var(--purple-glow), inset 0 0 20px rgba(0,0,0,0.35);
+  display: grid;
+  place-items: center;
+}
+.orbit-core-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--ghost);
+  text-indent: 0.28em;
+}
+
+/* Rotating tracks. Each item is a radial "spoke" from center to a ring. */
+.orbit-track { position: absolute; inset: 0; }
+.orbit-track-outer { animation: orbit-spin 40s linear infinite; }
+.orbit-track-inner { inset: 18%; animation: orbit-spin 32s linear infinite reverse; }
+
+.orbit-item {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 50%;
+  transform-origin: bottom center;
+  transform: rotate(var(--angle));
+}
+
+/* Bubble sits at the spoke tip and counter-rotates to stay perfectly upright.
+   `translate` (individual prop) handles centering; `transform` is free for the
+   counter-spin animation — the two compose without conflict. */
+.skill-bubble {
+  position: absolute;
+  top: 0; left: 0;
+  translate: -50% -50%;
+  white-space: nowrap;
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  background: rgba(14,16,24,0.82);
+  border: 1px solid var(--purple-dim);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+  transition: color 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.orbit-track-outer .skill-bubble { animation: orbit-counter 40s linear infinite; }
+.orbit-track-inner .skill-bubble { animation: orbit-counter 32s linear infinite reverse; }
+.skill-bubble:hover {
+  color: var(--ghost);
+  border-color: var(--purple);
+  box-shadow: var(--purple-glow);
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+/* Counter-rotation baked with the per-item --angle so text never tilts */
+@keyframes orbit-counter {
+  from { transform: rotate(calc(-1 * var(--angle))); }
+  to   { transform: rotate(calc(-1 * var(--angle) - 360deg)); }
+}
+
+@media (max-width: 560px) {
+  .skill-bubble { font-size: 0.68rem; padding: 0.34rem 0.7rem; }
+}
+
+/* ═══════════════════ EXPERIENCE CARDS (Figma-inspired) ═══════════════════ */
+.exp-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 1.5rem;
+}
+.exp-card {
+  position: relative;
+  display: flex;
+  gap: 1.2rem;
+  padding: 1.7rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--bg-surface) 0%, var(--bg-secondary) 100%);
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
+}
+/* Purple glow bleed in the corner, echoing the design's gradient blobs */
+.exp-card::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, var(--purple-soft) 0%, transparent 70%);
+  pointer-events: none;
+}
+.exp-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--purple);
+  box-shadow: var(--purple-glow);
+}
+.exp-card-icon {
+  flex: 0 0 auto;
+  width: 54px; height: 54px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 38%, var(--purple) 0%, var(--purple-deep) 78%);
+  box-shadow: var(--purple-glow);
+}
+.exp-card-body { min-width: 0; }
+.exp-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--purple);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+.exp-card-body h3 { font-size: 1.25rem; margin: 0 0 0.15rem; color: var(--text-primary); }
+.exp-card-body h4 { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); margin: 0 0 0.9rem; }
+.exp-card-body p  { font-size: 0.95rem; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+
 /* ── Reduced motion: neutralize loops, keep static beauty ─── */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -2379,6 +2535,10 @@ html {
   .hero-image .orbit-inner,
   .hero-image .halo,
   .ticker-track,
-  .status-dot { animation: none !important; }
+  .status-dot,
+  .orbit-ring,
+  .orbit-track { animation: none !important; }
+  /* Keep bubbles upright when their spin is disabled */
+  .skill-bubble { animation: none !important; transform: rotate(calc(-1 * var(--angle))) !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
 }

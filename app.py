@@ -47,6 +47,7 @@ async def index(request: Request):
             "metrics": config.METRICS,
             "about_cards": config.ABOUT_CARDS,
             "skills": config.SKILLS,
+            "orbit_skills": config.ORBIT_SKILLS,
             "projects": config.PROJECTS,
             "experience": config.EXPERIENCE,
         },
