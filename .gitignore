@@ -23,3 +23,6 @@ Thumbs.db
 # Logs
 *.log
 portfolio-fullstack.tar.gz
+
+# Testimonials database (runtime data)
+testimonials.db

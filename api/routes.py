@@ -7,16 +7,19 @@ optional SMTP email delivery.
 
 import asyncio
 import logging
+import time
+from collections import defaultdict
 from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, EmailStr, Field
 
 import config
+from api import testimonials as tm
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -32,6 +35,89 @@ class ContactRequest(BaseModel):
 class ContactResponse(BaseModel):
     success: bool
     message: str
+
+
+# ── Testimonials ─────────────────────────────────────────────
+class TestimonialRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=80)
+    role: str = Field(..., min_length=2, max_length=120)
+    message: str = Field(..., min_length=10, max_length=600)
+    # Honeypot: must stay empty. Bots fill it; humans never see the field.
+    website: str = Field(default="", max_length=0)
+
+
+# Simple in-memory, per-IP rate limiter (resets on restart — fine for a
+# single-process portfolio). Caps testimonial submissions to curb spam.
+TESTIMONIAL_RATE_MAX = 3
+TESTIMONIAL_RATE_WINDOW = 3600  # seconds
+_SUBMIT_TIMES: dict[str, list[float]] = defaultdict(list)
+
+
+def _rate_limited(client_ip: str) -> bool:
+    now = time.time()
+    recent = [t for t in _SUBMIT_TIMES[client_ip] if now - t < TESTIMONIAL_RATE_WINDOW]
+    _SUBMIT_TIMES[client_ip] = recent
+    if len(recent) >= TESTIMONIAL_RATE_MAX:
+        return True
+    recent.append(now)
+    return False
+
+
+def _require_admin(x_admin_token: str = Header(default="")) -> None:
+    """Gate admin endpoints behind the ADMIN_TOKEN shared secret."""
+    if not config.ADMIN_TOKEN or x_admin_token != config.ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+
+@router.post("/testimonials", response_model=ContactResponse)
+async def submit_testimonial(data: TestimonialRequest, request: Request):
+    """Public submission — saved as 'pending' for manual approval."""
+    client_ip = request.client.host if request.client else "unknown"
+    if _rate_limited(client_ip):
+        raise HTTPException(
+            status_code=429,
+            detail="Too many submissions. Please try again later.",
+        )
+    tm.create_testimonial(data.name.strip(), data.role.strip(), data.message.strip())
+    logger.info(f"New testimonial pending from {data.name!r} ({client_ip})")
+    return ContactResponse(
+        success=True,
+        message="Thank you! Your testimonial has been submitted for review.",
+    )
+
+
+@router.get("/testimonials/pending", dependencies=[Depends(_require_admin)])
+async def list_pending_testimonials():
+    """Admin: list testimonials awaiting approval."""
+    return {"testimonials": tm.list_pending()}
+
+
+@router.get("/testimonials/all", dependencies=[Depends(_require_admin)])
+async def list_all_testimonials():
+    """Admin: list every testimonial with its status (for the moderation UI)."""
+    return {"testimonials": tm.list_all()}
+
+
+@router.post(
+    "/testimonials/{testimonial_id}/approve",
+    dependencies=[Depends(_require_admin)],
+)
+async def approve_testimonial(testimonial_id: int):
+    """Admin: publish a pending testimonial."""
+    if not tm.approve(testimonial_id):
+        raise HTTPException(status_code=404, detail="Testimonial not found.")
+    return {"success": True}
+
+
+@router.delete(
+    "/testimonials/{testimonial_id}",
+    dependencies=[Depends(_require_admin)],
+)
+async def delete_testimonial(testimonial_id: int):
+    """Admin: remove a testimonial (pending or approved)."""
+    if not tm.delete(testimonial_id):
+        raise HTTPException(status_code=404, detail="Testimonial not found.")
+    return {"success": True}
 
 
 # ── Contact Form Endpoint ────────────────────────────────────

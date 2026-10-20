@@ -35,6 +35,11 @@ SMTP_USER = config("SMTP_USER", "")
 SMTP_PASSWORD = config("SMTP_PASSWORD", "")
 CONTACT_RECIPIENT = config("CONTACT_RECIPIENT", YOUR_EMAIL)
 
+# ── Testimonials ──────────────────────────────────────────────
+TESTIMONIALS_DB = config("TESTIMONIALS_DB", "testimonials.db")
+ADMIN_TOKEN = config("ADMIN_TOKEN", "")  # set in .env to enable approve/delete
+DATABASE_URL = config("DATABASE_URL", "")  # Postgres (e.g. Render/Neon); empty = local SQLite
+
 # ── Tenure (auto-computed) ────────────────────────────────────
 # Single source of truth for current-role tenure. The hero metric and the
 # experience timeline both derive their "years" from this start date, so they
