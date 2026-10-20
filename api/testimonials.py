@@ -9,7 +9,7 @@ are saved as 'pending' and only surface once an admin approves them.
 import os
 import sqlite3
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 DB_PATH = os.environ.get("TESTIMONIALS_DB", "testimonials.db")
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
@@ -79,7 +79,7 @@ def init_db() -> None:
 
 def create_testimonial(name: str, role: str, message: str) -> int:
     """Insert a new pending testimonial; returns its row id."""
-    created_at = datetime.now(tz=timezone.utc).isoformat()
+    created_at = datetime.now(tz=UTC).isoformat()
     values = (name, role, message, STATUS_PENDING, created_at)
     with _connect() as (conn, ph):
         cols = f"({ph}, {ph}, {ph}, {ph}, {ph})"

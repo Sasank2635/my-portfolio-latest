@@ -9,7 +9,7 @@ import asyncio
 import logging
 import time
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
@@ -137,7 +137,7 @@ async def contact(data: ContactRequest):
         f"{'=' * 50}\n\n"
         f"Name:    {data.name}\n"
         f"Email:   {data.email}\n"
-        f"Date:    {datetime.now(tz=timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n\n"
+        f"Date:    {datetime.now(tz=UTC).strftime('%Y-%m-%d %H:%M UTC')}\n\n"
         f"Message:\n{data.message}\n"
     )
 
@@ -158,7 +158,7 @@ async def contact(data: ContactRequest):
                     timeout=6.0,
                 )
                 logger.info(f"Email delivered for {data.email}")
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 logger.error(
                     f"SMTP send timed out (>6s) for {data.email}. "
                     f"Check SMTP_HOST / SMTP_PORT / network reachability."

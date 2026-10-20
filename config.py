@@ -5,7 +5,7 @@ All personal data, project info, skills, and experience live here.
 Edit this file (or override via .env) to customize your portfolio.
 """
 
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 
 from decouple import config
 
@@ -49,7 +49,7 @@ CURRENT_ROLE_START = date(2024, 10, 1)
 
 def years_since(start: date, today: date | None = None) -> float:
     """Years elapsed from `start` to `today`, rounded to one decimal."""
-    today = today or datetime.now(tz=timezone.utc).date()
+    today = today or datetime.now(tz=UTC).date()
     return round((today - start).days / 365.25, 1)
 
 
