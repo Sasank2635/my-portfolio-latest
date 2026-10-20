@@ -108,8 +108,10 @@
       <div class="halo" aria-hidden="true"></div>
       <div class="orbit" aria-hidden="true"></div>
       <div class="orbit-inner" aria-hidden="true"></div>
-      <!-- TODO: replace profile2.png with a polished B&W or low-saturation headshot (square, ≥600×600px) -->
-      <img src="/static/images/profile2.png" alt="{{ name }}">
+      <picture>
+        <source srcset="/static/images/profile3.webp" type="image/webp">
+        <img src="/static/images/profile3-opt.jpg" alt="{{ name }}" width="780" height="780" loading="eager" decoding="async">
+      </picture>
     </div>
 
     <!-- Terminal decoration -->
@@ -195,6 +197,30 @@
       <h2 class="section-title">Tools &amp; Technologies</h2>
       <div class="section-rule"></div>
     </div>
+    <!-- Orbiting skills constellation (inspired by the Figma portfolio design) -->
+    <div class="skills-orbit reveal" role="img" aria-label="Core stack orbiting a central hub">
+      <div class="orbit-ring orbit-ring-1" aria-hidden="true"></div>
+      <div class="orbit-ring orbit-ring-2" aria-hidden="true"></div>
+      <div class="orbit-ring orbit-ring-3" aria-hidden="true"></div>
+      <div class="orbit-core" aria-hidden="true">
+        <span class="orbit-core-label">STACK</span>
+      </div>
+      <div class="orbit-track orbit-track-outer" aria-hidden="true">
+        {% for s in orbit_skills[:6] %}
+        <div class="orbit-item" style="--angle: {{ loop.index0 * 60 }}deg">
+          <span class="skill-bubble">{{ s }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="orbit-track orbit-track-inner" aria-hidden="true">
+        {% for s in orbit_skills[6:] %}
+        <div class="orbit-item" style="--angle: {{ loop.index0 * 60 }}deg">
+          <span class="skill-bubble">{{ s }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
     <div class="skills-grid">
       {% for group in skills %}
       <div class="skill-group reveal delay-{{ loop.index }}">
@@ -281,14 +307,17 @@
       <h2 class="section-title">Experience</h2>
       <div class="section-rule"></div>
     </div>
-    <div class="timeline">
+    <div class="exp-cards">
       {% for exp in experience %}
-      <div class="timeline-item reveal">
-        <div class="timeline-date">{{ exp.date }}</div>
-        <h3>{{ exp.role }}</h3>
-        <h4>{{ exp.company }}</h4>
-        <p>{{ exp.desc }}</p>
-      </div>
+      <article class="exp-card reveal">
+        <div class="exp-card-icon">{{ exp.icon | default('💼') }}</div>
+        <div class="exp-card-body">
+          <div class="exp-card-date">{{ exp.date }}</div>
+          <h3>{{ exp.role }}</h3>
+          <h4>{{ exp.company }}</h4>
+          <p>{{ exp.desc }}</p>
+        </div>
+      </article>
       {% endfor %}
     </div>
   </section>

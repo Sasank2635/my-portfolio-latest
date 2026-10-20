@@ -138,6 +138,14 @@ SKILLS = [
     },
 ]
 
+# ── Orbit Skills (Skills-section constellation) ───────────────
+# Short labels that orbit the central hub. First half rides the outer ring,
+# second half the inner ring — keep this list even for a balanced layout.
+ORBIT_SKILLS = [
+    "Python", "Docker", "AWS", "FastAPI", "PostgreSQL", "Kubernetes",
+    "Redis", "CI/CD", "Linux", "Celery", "SQL", "Azure",
+]
+
 # ── Projects ──────────────────────────────────────────────────
 PROJECTS = [
     {
@@ -196,6 +204,7 @@ PROJECTS = [
 EXPERIENCE = [
     {
         "date": f"Oct 2024 — Present · {YEARS_EXPERIENCE} yrs",
+        "icon": "⚙️",
         "role": "Software Engineer",
         "company": "Cozentus Technologies Pvt. Ltd. — Bhubaneswar",
         "desc": (
