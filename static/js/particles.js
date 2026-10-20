@@ -37,17 +37,17 @@
     { speed: 0.16, sizeMin: 0.8, sizeMax: 1.9, alphaMin: 0.55, alphaMax: 1.00, parallax: 2.6 },
   ];
 
-  // Koenigsegg Aurora palette — cool whites, ice blues, signature aurora.
+  // Purple (Figma #763CAC) palette — cool whites with violet accents.
   // No warm tones — keep it cold and precise.
   const PALETTES = [
     [236, 240, 245], // ghost white (majority)
     [236, 240, 245],
     [236, 240, 245],
-    [205, 220, 235], // pale steel
-    [180, 205, 225], // colder pale
-    [111, 195, 223], // ice cyan accent
-    [111, 195, 223],
-    [ 43, 108, 176], // aurora blue (rare)
+    [214,206,236], // pale steel
+    [196,180,228], // colder pale
+    [180,130,235], // ice cyan accent
+    [180,130,235],
+    [120,70,180], // aurora blue (rare)
   ];
 
   let width = 0, height = 0;

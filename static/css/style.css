@@ -7,7 +7,7 @@
 /* ── Imports ─────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── CSS Variables — Koenigsegg Aurora Blue edition ───────── */
+/* ── CSS Variables — Purple (Figma) edition ───────── */
 :root {
   /* Surface — deep midnight with a hint of blue, like carbon under cold lights */
   --bg-primary:    #06080d;
@@ -26,12 +26,12 @@
   --text-muted:    #7e8ca3;
 
   /* Accents — VIVID Horizon Blue + electric cyan. No more muddy navy. */
-  --accent:        #1d8cf0;
-  --accent-dim:    rgba(29,140,240,0.22);
-  --accent-glow:   0 0 32px rgba(29,140,240,0.55);
-  --accent2:       #22d3ee;
-  --accent2-dim:   rgba(34,211,238,0.18);
-  --accent2-glow:  0 0 28px rgba(34,211,238,0.5);
+  --accent:        #763cac;
+  --accent-dim:    rgba(118,60,172,0.22);
+  --accent-glow:   0 0 32px rgba(118,60,172,0.55);
+  --accent2:       #b482eb;
+  --accent2-dim:   rgba(180,130,235,0.18);
+  --accent2-glow:  0 0 28px rgba(180,130,235,0.5);
   --accent3:       #f59e0b;
 
   /* Purple — lifted from the Figma portfolio design (radial #320F85 → #763CAC) */
@@ -40,6 +40,17 @@
   --purple-dim:    rgba(118,60,172,0.30);
   --purple-soft:   rgba(118,60,172,0.12);
   --purple-glow:   0 0 34px rgba(118,60,172,0.55);
+
+  /* Glassmorphism theme tokens — DARK-tinted frost (light fills look grey
+     on a dark theme). The translucency + blur read the particle field
+     behind; the light border/highlight gives the glass edge sheen. */
+  --glass-bg:          rgba(12,16,25,0.55);
+  --glass-bg-strong:   rgba(20,26,38,0.68);
+  --glass-border:      rgba(255,255,255,0.12);
+  --glass-blur:        blur(16px) saturate(135%);
+  --glass-blur-soft:   blur(9px) saturate(120%);
+  --glass-shadow:      0 8px 32px rgba(0,0,0,0.38);
+  --glass-highlight:   inset 0 1px 0 rgba(255,255,255,0.09);
 
   /* Koenigsegg signature tokens */
   --steel:         #6b7891;
@@ -103,7 +114,7 @@ body::before {
   border-radius: 50%;
   pointer-events: none;
   z-index: 9997;
-  background: radial-gradient(circle, rgba(0,232,176,0.05) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(149,97,207,0.05) 0%, transparent 65%);
   transform: translate(-50%, -50%);
   transition: opacity 0.4s;
   will-change: left, top;
@@ -238,7 +249,7 @@ nav.hidden { transform: translateY(-100%); }
 
 .hero-image:hover img {
   border-color: var(--accent);
-  box-shadow: 0 0 40px rgba(0,232,176,0.15), 0 25px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 0 40px rgba(149,97,207,0.15), 0 25px 60px rgba(0,0,0,0.5);
 }
 
 /* Decorative corner accents around the profile image */
@@ -258,7 +269,7 @@ nav.hidden { transform: translateY(-100%); }
   right: -10px;
   border-top: 2px solid var(--accent);
   border-right: 2px solid var(--accent);
-  box-shadow: 4px -4px 20px rgba(0,232,176,0.1);
+  box-shadow: 4px -4px 20px rgba(149,97,207,0.1);
 }
 
 .hero-image::after {
@@ -266,19 +277,19 @@ nav.hidden { transform: translateY(-100%); }
   left: -10px;
   border-bottom: 2px solid var(--accent2);
   border-left: 2px solid var(--accent2);
-  box-shadow: -4px 4px 20px rgba(124,106,239,0.1);
+  box-shadow: -4px 4px 20px rgba(118,60,172,0.1);
 }
 
 .hero-image:hover::before {
   top: -14px;
   right: -14px;
-  box-shadow: 6px -6px 30px rgba(0,232,176,0.2);
+  box-shadow: 6px -6px 30px rgba(149,97,207,0.2);
 }
 
 .hero-image:hover::after {
   bottom: -14px;
   left: -14px;
-  box-shadow: -6px 6px 30px rgba(124,106,239,0.2);
+  box-shadow: -6px 6px 30px rgba(118,60,172,0.2);
 }
 
 @keyframes heroImageReveal {
@@ -365,7 +376,7 @@ nav.hidden { transform: translateY(-100%); }
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 50px rgba(0,232,176,0.5);
+  box-shadow: 0 0 50px rgba(149,97,207,0.5);
 }
 .btn-ghost {
   background: transparent;
@@ -491,7 +502,7 @@ section {
   line-height: 1.2;
   display: inline-block;
   padding-bottom: 0.7rem;
-  border-bottom: 2px dashed rgba(124, 106, 239, 0.35);
+  border-bottom: 2px dashed rgba(118,60,172, 0.35);
 }
 .section-rule {
   width: 50px;
@@ -541,7 +552,7 @@ section + section::before {
 .about-card:hover {
   border-color: var(--accent);
   transform: translateX(6px);
-  box-shadow: -4px 0 20px rgba(0,232,176,0.1);
+  box-shadow: -4px 0 20px rgba(149,97,207,0.1);
 }
 .about-card-icon {
   width: 44px; height: 44px;
@@ -553,8 +564,8 @@ section + section::before {
 .about-card-icon.devops    { background: var(--accent-dim); }
 .about-card-icon.backend   { background: var(--accent2-dim); }
 .about-card-icon.ai        { background: rgba(240,98,146,0.1); }
-.about-card-icon.data      { background: rgba(0,232,176,0.08); }
-.about-card-icon.analytics { background: rgba(124,106,239,0.08); }
+.about-card-icon.data      { background: rgba(149,97,207,0.08); }
+.about-card-icon.analytics { background: rgba(118,60,172,0.08); }
 .about-card h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.25rem; }
 .about-card p  { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; }
 
@@ -669,7 +680,7 @@ section + section::before {
   width: 10px; height: 10px;
   border-radius: 50%;
   background: var(--accent2);
-  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(124,106,239,0.5);
+  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(118,60,172,0.5);
 }
 .projects-rail::before { left: 2rem; }
 .projects-rail::after  { right: 2rem; }
@@ -744,8 +755,8 @@ section + section::before {
   background: var(--bg-elevated);
   border: 2.5px solid var(--accent2);
   box-shadow:
-    0 0 10px rgba(124,106,239,0.8),
-    0 0 22px rgba(124,106,239,0.3),
+    0 0 10px rgba(118,60,172,0.8),
+    0 0 22px rgba(118,60,172,0.3),
     inset 0 0 6px rgba(0,0,0,0.9);
   z-index: 10;
   transition: border-color 0.4s, box-shadow 0.4s;
@@ -773,8 +784,8 @@ section + section::before {
 .project-card:hover .project-peg {
   border-color: var(--accent);
   box-shadow:
-    0 0 14px rgba(0,232,176,0.8),
-    0 0 28px rgba(0,232,176,0.3),
+    0 0 14px rgba(149,97,207,0.8),
+    0 0 28px rgba(149,97,207,0.3),
     inset 0 0 6px rgba(0,0,0,0.9);
 }
 
@@ -805,7 +816,7 @@ section + section::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,232,176,0.04), transparent 50%);
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(149,97,207,0.04), transparent 50%);
   opacity: 0;
   transition: opacity 0.4s;
   pointer-events: none;
@@ -849,7 +860,7 @@ section + section::before {
   font-weight: 500;
   padding: 0.3rem 0.65rem;
   background: var(--accent2-dim);
-  border: 1px solid rgba(124,106,239,0.15);
+  border: 1px solid rgba(118,60,172,0.15);
   border-radius: 3px;
   color: var(--accent2);
 }
@@ -1028,7 +1039,7 @@ section + section::before {
 }
 .btn-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 40px rgba(0,232,176,0.25), 0 0 40px rgba(124,106,239,0.25);
+  box-shadow: 0 0 40px rgba(149,97,207,0.25), 0 0 40px rgba(118,60,172,0.25);
 }
 .btn-submit:disabled {
   opacity: 0.5;
@@ -1049,7 +1060,7 @@ section + section::before {
   display: block;
   background: var(--accent-dim);
   color: var(--accent);
-  border: 1px solid rgba(0,232,176,0.2);
+  border: 1px solid rgba(149,97,207,0.2);
 }
 .form-status.error {
   display: block;
@@ -1211,8 +1222,8 @@ footer span {
    no extra DOM. Sits beneath the particle canvas (which is z:0). */
 body {
   background:
-    radial-gradient(ellipse 70% 55% at 18% 12%,  rgba(124,106,239,0.13) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 82% 78%,  rgba(0,232,176,0.09)   0%, transparent 62%),
+    radial-gradient(ellipse 70% 55% at 18% 12%,  rgba(118,60,172,0.13) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 82% 78%,  rgba(149,97,207,0.09)   0%, transparent 62%),
     radial-gradient(ellipse 90% 60% at 50% 110%, rgba(240,98,146,0.07)  0%, transparent 65%),
     var(--bg-primary);
   background-attachment: fixed;
@@ -1243,8 +1254,8 @@ nav { z-index: 100; }
 /* ── Cursor glow: cosmic dual-tone, GPU-only transform ──── */
 #cursor-glow {
   background:
-    radial-gradient(circle, rgba(0,232,176,0.07) 0%, transparent 55%),
-    radial-gradient(circle, rgba(124,106,239,0.05) 0%, transparent 70%);
+    radial-gradient(circle, rgba(149,97,207,0.07) 0%, transparent 55%),
+    radial-gradient(circle, rgba(118,60,172,0.05) 0%, transparent 70%);
   mix-blend-mode: screen;
   will-change: transform;
 }
@@ -1269,7 +1280,7 @@ nav { z-index: 100; }
   position: absolute;
   inset: -28px;
   border-radius: 50%;
-  border: 1px dashed rgba(124,106,239,0.35);
+  border: 1px dashed rgba(118,60,172,0.35);
   z-index: 1;
   pointer-events: none;
   animation: orbitSpin 36s linear infinite;
@@ -1278,7 +1289,7 @@ nav { z-index: 100; }
   position: absolute;
   inset: -12px;
   border-radius: 50%;
-  border: 1px solid rgba(0,232,176,0.18);
+  border: 1px solid rgba(149,97,207,0.18);
   z-index: 1;
   pointer-events: none;
   animation: orbitSpinReverse 24s linear infinite;
@@ -1291,7 +1302,7 @@ nav { z-index: 100; }
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 14px var(--accent), 0 0 28px rgba(0,232,176,0.5);
+  box-shadow: 0 0 14px var(--accent), 0 0 28px rgba(149,97,207,0.5);
   transform: translateX(-50%);
 }
 
@@ -1304,7 +1315,7 @@ nav { z-index: 100; }
   position: absolute;
   inset: -45px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124,106,239,0.18) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(118,60,172,0.18) 0%, transparent 60%);
   z-index: 0;
   pointer-events: none;
   filter: blur(8px);
@@ -1326,8 +1337,8 @@ nav { z-index: 100; }
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(0,232,176,0.6) 25%,
-    rgba(124,106,239,0.6) 75%,
+    rgba(149,97,207,0.6) 25%,
+    rgba(118,60,172,0.6) 75%,
     transparent 100%);
   filter: blur(0.3px);
   opacity: 0.7;
@@ -1377,8 +1388,8 @@ section { content-visibility: auto; contain-intrinsic-size: 800px; }
   /* Nebula is the most expensive paint on mobile — slim it */
   body {
     background:
-      radial-gradient(ellipse 90% 50% at 50% 0%,  rgba(124,106,239,0.12) 0%, transparent 65%),
-      radial-gradient(ellipse 90% 50% at 50% 100%, rgba(0,232,176,0.07)  0%, transparent 65%),
+      radial-gradient(ellipse 90% 50% at 50% 0%,  rgba(118,60,172,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 90% 50% at 50% 100%, rgba(149,97,207,0.07)  0%, transparent 65%),
       var(--bg-primary);
     background-attachment: scroll; /* fixed is jank on iOS */
   }
@@ -1411,7 +1422,7 @@ section { content-visibility: auto; contain-intrinsic-size: 800px; }
 }
 
 /* ==========================================================
-   ░░  KOENIGSEGG AURORA LAYER
+   ░░  PURPLE THEME LAYER (Figma #763CAC)
    Replaces the cosmic nebula with a Koenigsegg-edition surface:
    carbon-fiber weave overlay, blueprint precision grid, Tegel
    diamond accent, and aurora-blue glow ambiance. Sits after the
@@ -1421,33 +1432,27 @@ section { content-visibility: auto; contain-intrinsic-size: 800px; }
 /* Override body backdrop — deep midnight, two cool glows, no nebula */
 body {
   background:
-    radial-gradient(ellipse 65% 50% at 20% 8%,  rgba(43,108,176,0.18) 0%, transparent 62%),
-    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(111,195,223,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 65% 50% at 20% 8%,  rgba(118,60,172,0.18) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(149,97,207,0.08) 0%, transparent 65%),
     var(--bg-primary);
   background-attachment: fixed;
   position: relative;
 }
 
-/* Carbon-fiber weave overlay — extremely subtle, just a hint of material */
+/* Subtle grain only — carbon weave removed for a clean background */
 body::before {
   background-image:
-    /* original grain noise */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    /* diagonal carbon weave */
-    linear-gradient(45deg,  rgba(255,255,255,0.018) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.018) 50%, rgba(255,255,255,0.018) 75%, transparent 75%, transparent),
-    linear-gradient(-45deg, rgba(0,0,0,0.18) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.18) 50%, rgba(0,0,0,0.18) 75%, transparent 75%, transparent);
-  background-size: 256px 256px, 6px 6px, 6px 6px;
-  opacity: 0.45;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.025;
 }
 
-/* Blueprint precision grid — extremely faint, only visible against dark areas */
+/* Soft purple ambient glows only — grid removed for a clean background */
 body {
   background-image:
-    radial-gradient(ellipse 65% 50% at 20% 8%,  rgba(43,108,176,0.18) 0%, transparent 62%),
-    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(111,195,223,0.08) 0%, transparent 65%),
-    linear-gradient(rgba(111,195,223,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(111,195,223,0.04) 1px, transparent 1px);
-  background-size: auto, auto, 80px 80px, 80px 80px;
+    radial-gradient(ellipse 65% 50% at 20% 8%,  rgba(118,60,172,0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 45% at 85% 85%, rgba(149,97,207,0.08) 0%, transparent 65%);
+  background-size: auto, auto;
   background-color: var(--bg-primary);
 }
 
@@ -1461,7 +1466,7 @@ body {
   margin-bottom: 1px;
   background: var(--accent2);
   transform: rotate(45deg);
-  box-shadow: 0 0 8px rgba(111,195,223,0.5);
+  box-shadow: 0 0 8px rgba(149,97,207,0.5);
   vertical-align: middle;
 }
 
@@ -1469,14 +1474,14 @@ body {
 .section-title::after {
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(43,108,176,0.7) 25%,
-    rgba(111,195,223,0.7) 75%,
+    rgba(118,60,172,0.7) 25%,
+    rgba(149,97,207,0.7) 75%,
     transparent 100%);
 }
 
 /* Status dot — colder pulse */
 .status-dot {
-  box-shadow: 0 0 12px rgba(111,195,223,0.6);
+  box-shadow: 0 0 12px rgba(149,97,207,0.6);
 }
 
 /* Hero h1 gradient line — aurora sweep */
@@ -1491,7 +1496,7 @@ body {
   color: var(--ghost);
   font-variant-numeric: tabular-nums;
   letter-spacing: -1.2px;
-  text-shadow: 0 0 18px rgba(111,195,223,0.35);
+  text-shadow: 0 0 18px rgba(149,97,207,0.35);
 }
 .metric { border-left-color: var(--accent2); }
 
@@ -1499,10 +1504,10 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
   color: var(--ghost);
-  box-shadow: 0 0 28px rgba(43,108,176,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  box-shadow: 0 0 28px rgba(118,60,172,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 .btn-primary:hover {
-  box-shadow: 0 0 42px rgba(111,195,223,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 0 42px rgba(149,97,207,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
 /* Ghost-outline button — brushed steel border */
@@ -1513,7 +1518,7 @@ body {
 .btn-ghost:hover {
   border-color: var(--accent2);
   color: var(--accent2);
-  background: rgba(111,195,223,0.05);
+  background: rgba(149,97,207,0.05);
 }
 
 /* Submit button — aurora gradient ingot */
@@ -1522,13 +1527,13 @@ body {
   color: var(--ghost);
 }
 .btn-submit:hover {
-  box-shadow: 0 0 40px rgba(43,108,176,0.35), 0 0 40px rgba(111,195,223,0.25);
+  box-shadow: 0 0 40px rgba(118,60,172,0.35), 0 0 40px rgba(149,97,207,0.25);
 }
 
 /* Ticker strip — brushed-steel band with aurora separators */
 .ticker-strip {
   background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
-  border-color: rgba(43,108,176,0.5);
+  border-color: rgba(118,60,172,0.5);
 }
 .ticker-item .t-accent  { color: var(--accent2); }
 .ticker-item .t-accent2 { color: var(--ghost); }
@@ -1546,42 +1551,42 @@ body {
 .projects-rail::before,
 .projects-rail::after {
   background: var(--accent2);
-  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(111,195,223,0.5);
+  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(149,97,207,0.5);
 }
 .project-peg { border-color: var(--accent2); }
 .project-card:hover .project-peg {
   border-color: var(--accent);
-  box-shadow: 0 0 14px rgba(43,108,176,0.8), 0 0 28px rgba(111,195,223,0.3), inset 0 0 6px rgba(0,0,0,0.9);
+  box-shadow: 0 0 14px rgba(118,60,172,0.8), 0 0 28px rgba(149,97,207,0.3), inset 0 0 6px rgba(0,0,0,0.9);
 }
 
 /* Cursor glow — aurora pair */
 #cursor-glow {
   background:
-    radial-gradient(circle, rgba(43,108,176,0.08)  0%, transparent 55%),
-    radial-gradient(circle, rgba(111,195,223,0.06) 0%, transparent 70%);
+    radial-gradient(circle, rgba(118,60,172,0.08)  0%, transparent 55%),
+    radial-gradient(circle, rgba(149,97,207,0.06) 0%, transparent 70%);
 }
 
 /* Hero orbital ring — keep but switch to aurora */
-.hero-image .orbit       { border-color: rgba(111,195,223,0.4); }
-.hero-image .orbit-inner { border-color: rgba(43,108,176,0.3); }
+.hero-image .orbit       { border-color: rgba(149,97,207,0.4); }
+.hero-image .orbit-inner { border-color: rgba(118,60,172,0.3); }
 .hero-image .orbit::before {
   background: var(--accent2);
-  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(111,195,223,0.5);
+  box-shadow: 0 0 14px var(--accent2), 0 0 28px rgba(149,97,207,0.5);
 }
 .hero-image .halo {
-  background: radial-gradient(circle, rgba(43,108,176,0.22) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(118,60,172,0.22) 0%, transparent 60%);
 }
 
 /* Hero image corner accents — aurora pair */
 .hero-image::before {
   border-top-color: var(--accent2);
   border-right-color: var(--accent2);
-  box-shadow: 4px -4px 20px rgba(111,195,223,0.18);
+  box-shadow: 4px -4px 20px rgba(149,97,207,0.18);
 }
 .hero-image::after {
   border-bottom-color: var(--accent);
   border-left-color: var(--accent);
-  box-shadow: -4px 4px 20px rgba(43,108,176,0.18);
+  box-shadow: -4px 4px 20px rgba(118,60,172,0.18);
 }
 
 /* Timeline accent — aurora */
@@ -1590,18 +1595,18 @@ body {
 }
 .timeline-item::before {
   background: var(--accent2);
-  box-shadow: 0 0 14px rgba(111,195,223,0.6);
+  box-shadow: 0 0 14px rgba(149,97,207,0.6);
 }
 
 /* Logo — ghost white with cyan dim */
-.logo { color: var(--ghost); text-shadow: 0 0 18px rgba(111,195,223,0.35); }
+.logo { color: var(--ghost); text-shadow: 0 0 18px rgba(149,97,207,0.35); }
 .logo .dim { color: var(--accent); }
 
 /* Nav links hover — aurora */
 .nav-links a:hover { color: var(--accent2); }
 .nav-links a::after {
   background: var(--accent2);
-  box-shadow: 0 0 14px rgba(111,195,223,0.5);
+  box-shadow: 0 0 14px rgba(149,97,207,0.5);
 }
 
 /* Nav status — cold blue */
@@ -1611,7 +1616,7 @@ body {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--accent2);
-  box-shadow: 0 0 0 3px rgba(111,195,223,0.18);
+  box-shadow: 0 0 0 3px rgba(149,97,207,0.18);
 }
 
 /* ==========================================================
@@ -1642,7 +1647,7 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(29,140,240,0.18), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(118,60,172,0.18), transparent 70%),
     rgba(6,8,13,0.78);
   backdrop-filter: blur(14px) saturate(1.1);
   -webkit-backdrop-filter: blur(14px) saturate(1.1);
@@ -1654,14 +1659,14 @@ body {
   width: min(1100px, 100%);
   height: min(92vh, 1200px);
   background:
-    linear-gradient(180deg, rgba(34,211,238,0.04), transparent 30%),
+    linear-gradient(180deg, rgba(180,130,235,0.04), transparent 30%),
     var(--bg-surface);
   border: 1px solid var(--accent2);
   border-radius: 14px;
   box-shadow:
     0 60px 120px rgba(0,0,0,0.65),
-    0 0 0 1px rgba(34,211,238,0.15),
-    0 0 80px rgba(29,140,240,0.25),
+    0 0 0 1px rgba(180,130,235,0.15),
+    0 0 80px rgba(118,60,172,0.25),
     inset 0 1px 0 rgba(255,255,255,0.05);
   display: flex;
   flex-direction: column;
@@ -1688,7 +1693,7 @@ body {
 .rm-corner-bl { bottom: -1px; left: -1px;    border-bottom: 2px solid var(--accent);  border-left:   2px solid var(--accent);  border-bottom-left-radius: 14px; }
 .rm-corner-br { bottom: -1px; right: -1px;   border-bottom: 2px solid var(--accent2); border-right:  2px solid var(--accent2); border-bottom-right-radius: 14px; }
 .rm-corner-tl, .rm-corner-tr, .rm-corner-bl, .rm-corner-br {
-  box-shadow: 0 0 18px rgba(34,211,238,0.45);
+  box-shadow: 0 0 18px rgba(180,130,235,0.45);
 }
 
 /* Top bar — title row with live-dot, name, close X */
@@ -1699,7 +1704,7 @@ body {
   gap: 1rem;
   padding: 0.85rem 1.4rem;
   background: linear-gradient(180deg, var(--bg-elevated), var(--bg-surface));
-  border-bottom: 1px solid rgba(34,211,238,0.2);
+  border-bottom: 1px solid rgba(180,130,235,0.2);
   flex-shrink: 0;
   position: relative;
   z-index: 1;
@@ -1721,7 +1726,7 @@ body {
   height: 7px;
   border-radius: 50%;
   background: var(--accent2);
-  box-shadow: 0 0 10px rgba(34,211,238,0.8);
+  box-shadow: 0 0 10px rgba(180,130,235,0.8);
   animation: statusPulse 2.5s infinite;
 }
 .rm-label::before { content: '// '; color: var(--text-muted); }
@@ -1758,8 +1763,8 @@ body {
 .resume-modal-close:hover {
   border-color: var(--accent2);
   color: var(--accent2);
-  background: rgba(34,211,238,0.08);
-  box-shadow: 0 0 18px rgba(34,211,238,0.3);
+  background: rgba(180,130,235,0.08);
+  box-shadow: 0 0 18px rgba(180,130,235,0.3);
   transform: rotate(90deg);
 }
 
@@ -1800,8 +1805,8 @@ body {
   border-radius: 6px;
   box-shadow:
     0 18px 40px rgba(0,0,0,0.55),
-    0 0 0 1px rgba(34,211,238,0.18),
-    0 0 32px rgba(29,140,240,0.18);
+    0 0 0 1px rgba(180,130,235,0.18),
+    0 0 32px rgba(118,60,172,0.18);
   background: #ffffff;
   /* Block right-click "Save image as..." on the canvas */
   -webkit-user-select: none;
@@ -1835,7 +1840,7 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 2px solid rgba(34,211,238,0.25);
+  border: 2px solid rgba(180,130,235,0.25);
   border-top-color: var(--accent2);
   animation: resumeSpin 0.9s linear infinite;
 }
@@ -1857,8 +1862,8 @@ body {
   transition: all 0.3s var(--ease-out);
 }
 .resume-status-fallback:hover {
-  background: rgba(34,211,238,0.08);
-  box-shadow: 0 0 20px rgba(34,211,238,0.3);
+  background: rgba(180,130,235,0.08);
+  box-shadow: 0 0 20px rgba(180,130,235,0.3);
 }
 
 /* On reduced motion: skip the page-in animation + spinner */
@@ -1874,7 +1879,7 @@ body {
   gap: 1.2rem;
   padding: 0.55rem 1.4rem;
   background: linear-gradient(0deg, var(--bg-elevated), var(--bg-surface));
-  border-top: 1px solid rgba(34,211,238,0.2);
+  border-top: 1px solid rgba(180,130,235,0.2);
   flex-shrink: 0;
 }
 .rm-foot-label {
@@ -1914,11 +1919,11 @@ body {
     border-radius: 0;
     border-left: none;
     border-right: none;
-    border-top: 1px solid rgba(34,211,238,0.35);
-    border-bottom: 1px solid rgba(34,211,238,0.35);
+    border-top: 1px solid rgba(180,130,235,0.35);
+    border-bottom: 1px solid rgba(180,130,235,0.35);
     box-shadow:
-      0 0 60px rgba(29,140,240,0.18),
-      inset 0 0 0 1px rgba(34,211,238,0.18);
+      0 0 60px rgba(118,60,172,0.18),
+      inset 0 0 0 1px rgba(180,130,235,0.18);
   }
   /* Keep two thin aurora corner accents — bottom only — for brand consistency */
   .rm-corner-tl, .rm-corner-tr { display: none; }
@@ -1993,7 +1998,7 @@ body {
 
 /* ── Tap-highlight in Aurora (default is muddy grey) ─────── */
 html {
-  -webkit-tap-highlight-color: rgba(34,211,238,0.18);
+  -webkit-tap-highlight-color: rgba(180,130,235,0.18);
 }
 
 /* ── Touch: instant tactile press on key buttons ──────────── */
@@ -2061,12 +2066,12 @@ html {
 
 /* Aurora text-selection */
 ::selection {
-  background: rgba(34,211,238,0.35);
+  background: rgba(180,130,235,0.35);
   color: var(--ghost);
-  text-shadow: 0 0 12px rgba(34,211,238,0.6);
+  text-shadow: 0 0 12px rgba(180,130,235,0.6);
 }
 ::-moz-selection {
-  background: rgba(34,211,238,0.35);
+  background: rgba(180,130,235,0.35);
   color: var(--ghost);
 }
 
@@ -2076,7 +2081,7 @@ html {
   outline: 2px solid var(--accent2);
   outline-offset: 3px;
   border-radius: 4px;
-  box-shadow: 0 0 0 4px rgba(34,211,238,0.18);
+  box-shadow: 0 0 0 4px rgba(180,130,235,0.18);
   transition: outline-offset 0.15s var(--ease-out);
 }
 
@@ -2119,12 +2124,12 @@ html {
   background: transparent;
   color: var(--accent2);
   border: 1px solid var(--accent2);
-  box-shadow: inset 0 0 0 0 rgba(34,211,238,0.15);
+  box-shadow: inset 0 0 0 0 rgba(180,130,235,0.15);
   transition: all 0.35s var(--ease-out), box-shadow 0.4s var(--ease-out);
 }
 .btn-resume:hover {
-  background: rgba(34,211,238,0.08);
-  box-shadow: inset 0 0 0 100px rgba(34,211,238,0.06), 0 0 28px rgba(34,211,238,0.25);
+  background: rgba(180,130,235,0.08);
+  box-shadow: inset 0 0 0 100px rgba(180,130,235,0.06), 0 0 28px rgba(180,130,235,0.25);
 }
 
 /* ── Testimonial section ─────────────────────────────────── */
@@ -2136,7 +2141,7 @@ html {
   position: relative;
   padding: clamp(2rem, 4vw, 3.2rem) clamp(1.6rem, 3vw, 2.8rem);
   background:
-    linear-gradient(135deg, rgba(34,211,238,0.04), rgba(29,140,240,0.02)),
+    linear-gradient(135deg, rgba(180,130,235,0.04), rgba(118,60,172,0.02)),
     var(--bg-surface);
   border: 1px solid var(--border);
   border-left: 3px solid var(--accent2);
@@ -2218,21 +2223,21 @@ html {
 .skill-group::before {
   /* Override the soft-top highlight from earlier with a mouse-tracking spotlight */
   background:
-    radial-gradient(420px circle at var(--mx) var(--my), rgba(34,211,238,0.08), transparent 55%);
+    radial-gradient(420px circle at var(--mx) var(--my), rgba(180,130,235,0.08), transparent 55%);
 }
 
 .about-card { position: relative; overflow: hidden; }
 .about-card { --mx: 50%; --my: 50%; }
 .about-card::before {
   background:
-    radial-gradient(360px circle at var(--mx) var(--my), rgba(34,211,238,0.06), transparent 55%);
+    radial-gradient(360px circle at var(--mx) var(--my), rgba(180,130,235,0.06), transparent 55%);
 }
 
 /* project-card already uses --mouse-x / --mouse-y — re-tint to Aurora cyan */
 .project-card::before {
   background:
     radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                    rgba(34,211,238,0.06), transparent 50%);
+                    rgba(180,130,235,0.06), transparent 50%);
 }
 
 /* timeline-item gets a subtle accent following the cursor too */
@@ -2242,7 +2247,7 @@ html {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(300px circle at var(--mx) var(--my), rgba(34,211,238,0.05), transparent 60%);
+    radial-gradient(300px circle at var(--mx) var(--my), rgba(180,130,235,0.05), transparent 60%);
   opacity: 0;
   transition: opacity 0.5s var(--ease-out);
   pointer-events: none;
@@ -2285,8 +2290,8 @@ html {
   height: 84px;
   margin-left: -90px;
   margin-top:  -42px;
-  filter: drop-shadow(0 14px 30px rgba(29,140,240,0.45))
-          drop-shadow(0 0 24px rgba(34,211,238,0.4));
+  filter: drop-shadow(0 14px 30px rgba(118,60,172,0.45))
+          drop-shadow(0 0 24px rgba(180,130,235,0.4));
   transform-origin: 50% 60%;
   animation:
     mailLiftOff 2.8s cubic-bezier(0.4, 0.05, 0.5, 1) forwards;
@@ -2308,9 +2313,9 @@ html {
   background:
     radial-gradient(ellipse 32% 60% at 95% 50%, rgba(255,255,255,0.95) 0%, transparent 60%),
     radial-gradient(ellipse 50% 70% at 85% 50%, rgba(200,235,255,0.9) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 80% at 70% 50%, rgba(34,211,238,0.85) 0%, transparent 70%),
-    radial-gradient(ellipse 90% 90% at 50% 50%, rgba(29,140,240,0.75) 0%, transparent 75%),
-    linear-gradient(90deg, transparent 0%, rgba(29,140,240,0.0) 100%);
+    radial-gradient(ellipse 70% 80% at 70% 50%, rgba(180,130,235,0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 90% at 50% 50%, rgba(118,60,172,0.75) 0%, transparent 75%),
+    linear-gradient(90deg, transparent 0%, rgba(118,60,172,0.0) 100%);
   border-radius: 50% 60% 60% 50% / 50% 50% 50% 50%;
   filter: blur(1px);
   opacity: 0.95;
@@ -2348,8 +2353,8 @@ html {
   border-radius: 50%;
   left: var(--sx, 50%);
   top:  var(--sy, 70%);
-  background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(111,195,223,0.6) 60%, transparent 80%);
-  box-shadow: 0 0 12px rgba(111,195,223,0.7);
+  background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(149,97,207,0.6) 60%, transparent 80%);
+  box-shadow: 0 0 12px rgba(149,97,207,0.7);
   opacity: 0;
   animation: mailSparkle 1.6s ease-out forwards;
   animation-delay: var(--sd, 0s);
@@ -2541,4 +2546,91 @@ html {
   /* Keep bubbles upright when their spin is disabled */
   .skill-bubble { animation: none !important; transform: rotate(calc(-1 * var(--angle))) !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ═══════════════════ GLASS THEME LAYER ═══════════════════
+   Replaces the solid "matte" surfaces with frosted glassmorphism.
+   Appended last so it overrides earlier solid backgrounds. The
+   translucency lets the dark background + particle field show through,
+   while backdrop-filter frosts whatever sits behind each panel. */
+nav,
+.hero-terminal,
+.about-card,
+.skill-group,
+.project-card,
+.exp-card,
+.testimonial,
+.contact-form,
+.resume-modal-frame,
+footer {
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+}
+
+/* Nav is a full-width bar — frost it but drop the side/top edges */
+nav {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* "Available for hire" chip → small glass pill */
+.nav-status {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur-soft);
+  backdrop-filter: var(--glass-blur-soft);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+}
+
+/* Form fields as light glass */
+.form-group input,
+.form-group textarea {
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: var(--glass-blur-soft);
+  backdrop-filter: var(--glass-blur-soft);
+  border: 1px solid var(--glass-border);
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  background: var(--glass-bg-strong) !important;
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 3px rgba(180,130,235,0.15);
+}
+
+/* Hover: keep the frost, intensify it, add an accent edge.
+   (transform/lift + glow from the earlier rules still apply.) */
+.about-card:hover,
+.skill-group:hover,
+.project-card:hover {
+  background: var(--glass-bg-strong) !important;
+  border-color: var(--accent2);
+}
+.exp-card:hover {
+  background: var(--glass-bg-strong) !important;
+  border-color: var(--purple);
+}
+
+/* Project carousel cards can sit on a subtly deeper frost for legibility */
+.project-card { box-shadow: var(--glass-shadow), var(--glass-highlight); }
+
+/* Safari/Firefox fallback: if backdrop-filter is unsupported, fall back
+   to a slightly more opaque surface so panels stay readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  nav,
+  .hero-terminal,
+  .about-card,
+  .skill-group,
+  .project-card,
+  .exp-card,
+  .testimonial,
+  .contact-form,
+  .resume-modal-frame,
+  footer {
+    background: rgba(18,22,32,0.86) !important;
+  }
 }
