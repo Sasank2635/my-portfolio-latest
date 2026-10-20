@@ -5,7 +5,7 @@ All personal data, project info, skills, and experience live here.
 Edit this file (or override via .env) to customize your portfolio.
 """
 
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 
 from decouple import config
 
@@ -35,6 +35,11 @@ SMTP_USER = config("SMTP_USER", "")
 SMTP_PASSWORD = config("SMTP_PASSWORD", "")
 CONTACT_RECIPIENT = config("CONTACT_RECIPIENT", YOUR_EMAIL)
 
+# ── Testimonials ──────────────────────────────────────────────
+TESTIMONIALS_DB = config("TESTIMONIALS_DB", "testimonials.db")
+ADMIN_TOKEN = config("ADMIN_TOKEN", "")  # set in .env to enable approve/delete
+DATABASE_URL = config("DATABASE_URL", "")  # Postgres (e.g. Render/Neon); empty = local SQLite
+
 # ── Tenure (auto-computed) ────────────────────────────────────
 # Single source of truth for current-role tenure. The hero metric and the
 # experience timeline both derive their "years" from this start date, so they
@@ -44,7 +49,7 @@ CURRENT_ROLE_START = date(2024, 10, 1)
 
 def years_since(start: date, today: date | None = None) -> float:
     """Years elapsed from `start` to `today`, rounded to one decimal."""
-    today = today or datetime.now(tz=timezone.utc).date()
+    today = today or datetime.now(tz=UTC).date()
     return round((today - start).days / 365.25, 1)
 
 

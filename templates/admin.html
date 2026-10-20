@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — Testimonials Moderation</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body class="admin-body">
+  <main class="admin-wrap">
+    <h1 class="admin-title">Testimonials — Moderation</h1>
+
+    <!-- Login — shown until a valid token is entered -->
+    <div id="admin-login" class="admin-card">
+      <h2>Enter admin token</h2>
+      <p class="admin-note">This must match the <code>ADMIN_TOKEN</code> in your <code>.env</code>.</p>
+      <form id="admin-login-form" class="admin-login-form">
+        <input type="password" id="admin-token" placeholder="Admin token" autocomplete="off" required>
+        <button type="submit" class="btn-submit">Unlock →</button>
+      </form>
+      <div id="admin-login-status" class="form-status"></div>
+    </div>
+
+    <!-- Dashboard — shown after unlock -->
+    <div id="admin-dash" hidden>
+      <div class="admin-toolbar">
+        <button id="admin-refresh" class="btn-ghost-sm" type="button">↻ Refresh</button>
+        <button id="admin-logout" class="btn-ghost-sm" type="button">Lock</button>
+      </div>
+
+      <section>
+        <h2>Pending <span id="pending-count" class="admin-badge">0</span></h2>
+        <div id="pending-list" class="admin-list"></div>
+      </section>
+
+      <section>
+        <h2>Published <span id="approved-count" class="admin-badge">0</span></h2>
+        <div id="approved-list" class="admin-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

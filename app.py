@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import config
+from api import testimonials
 from api.routes import router as api_router
 
 # ── App Init ──────────────────────────────────────────────────
@@ -28,6 +29,12 @@ templates = Jinja2Templates(directory="templates")
 
 # Register API routes
 app.include_router(api_router, prefix="/api")
+
+# Initialize the testimonials database
+# (Postgres when DATABASE_URL is set — e.g. on Render — otherwise local SQLite)
+testimonials.set_database_url(config.DATABASE_URL)
+testimonials.set_db_path(config.TESTIMONIALS_DB)
+testimonials.init_db()
 
 
 # ── Pages ─────────────────────────────────────────────────────
@@ -50,8 +57,16 @@ async def index(request: Request):
             "orbit_skills": config.ORBIT_SKILLS,
             "projects": config.PROJECTS,
             "experience": config.EXPERIENCE,
+            "testimonials": testimonials.list_approved(),
         },
     )
+
+
+# ── Admin (testimonials moderation UI) ────────────────────────
+@app.get("/admin", response_class=HTMLResponse)
+async def admin(request: Request):
+    """Serve the moderation UI. Every action requires the admin token in-page."""
+    return templates.TemplateResponse("admin.html", {"request": request})
 
 
 # ── Health Check ──────────────────────────────────────────────
