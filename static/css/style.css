@@ -49,8 +49,13 @@
   --glass-border:      rgba(255,255,255,0.12);
   --glass-blur:        blur(16px) saturate(135%);
   --glass-blur-soft:   blur(9px) saturate(120%);
-  --glass-shadow:      0 8px 32px rgba(0,0,0,0.38);
+  --glass-shadow:      0 1px 2px rgba(0,0,0,0.28), 0 6px 16px rgba(0,0,0,0.30), 0 16px 40px rgba(0,0,0,0.30);
   --glass-highlight:   inset 0 1px 0 rgba(255,255,255,0.09);
+
+  /* Tactile depth shadows — ambient + direct light, layered for realism */
+  --shadow-rest:       0 1px 2px rgba(0,0,0,0.30), 0 4px 10px rgba(0,0,0,0.26);
+  --shadow-lift:       0 2px 4px rgba(0,0,0,0.30), 0 10px 24px rgba(0,0,0,0.28), 0 22px 48px rgba(0,0,0,0.32);
+  --shadow-press:      0 1px 2px rgba(0,0,0,0.42);
 
   /* Koenigsegg signature tokens */
   --steel:         #6b7891;
@@ -978,7 +983,11 @@ section + section::before {
 .contact-link-icon {
   display: grid;
   place-items: center;
-  font-size: 1.3rem;
+}
+.contact-link-icon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
 }
 
 .contact-form {
@@ -1151,12 +1160,12 @@ footer span {
 /* Scroll reveal */
 .reveal {
   opacity: 0;
-  transform: translateY(35px);
+  transform: translateY(40px) scale(0.98);
   transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
 }
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 .reveal.delay-1 { transition-delay: 0.1s; }
 .reveal.delay-2 { transition-delay: 0.2s; }
@@ -2379,9 +2388,9 @@ html {
 /* ═══════════════════ SKILLS ORBIT (Figma-inspired) ═══════════════════ */
 .skills-orbit {
   position: relative;
-  width: min(560px, 86vw);
-  height: min(560px, 86vw);
-  margin: 3.5rem auto 1rem;
+  width: min(560px, 76vw);
+  height: min(560px, 76vw);
+  margin: 3.5rem auto 4.5rem;
 }
 
 /* Decorative concentric rings — dashed so slow rotation reads as motion */
@@ -2475,7 +2484,7 @@ html {
 /* ═══════════════════ EXPERIENCE CARDS (Figma-inspired) ═══════════════════ */
 .exp-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
   gap: 1.5rem;
 }
 .exp-card {
@@ -2637,7 +2646,7 @@ nav {
 /* ═══════════════════ TESTIMONIALS ═══════════════════ */
 .testimonial-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
@@ -2829,3 +2838,146 @@ nav {
 .btn-delete { background: rgba(255,80,80,0.08); color: #ff8080; border-color: rgba(255,80,80,0.4); }
 .btn-delete:hover { background: rgba(255,80,80,0.16); }
 .admin-empty { font-size: 0.86rem; color: var(--text-muted); padding: 0.5rem 0; }
+
+/* ═══════════════════ TACTILE DEPTH & MOTION ═══════════════════
+   Spring-eased press feedback + layered shadows so elements feel physical.
+   Nothing responded to clicks before — press states are the big realism win. */
+
+/* Snappy, springy transform transition on every interactive control
+   (preserves smooth colour/shadow transitions for the other properties). */
+.btn,
+.btn-primary,
+.btn-ghost,
+.btn-resume,
+.btn-submit,
+.testimonial-cta,
+.contact-link,
+.btn-approve,
+.btn-delete,
+.btn-ghost-sm,
+.tm-modal-close,
+.skill-tag {
+  transition:
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.28s var(--ease-out),
+    background 0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out);
+}
+
+/* Press: push the element into the surface + drop its shadow closer. */
+.btn:active,
+.btn-primary:active,
+.btn-ghost:active,
+.btn-resume:active,
+.btn-submit:active,
+.testimonial-cta:active,
+.contact-link:active,
+.btn-approve:active,
+.btn-delete:active,
+.btn-ghost-sm:active,
+.tm-modal-close:active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: var(--shadow-press);
+}
+
+/* Cards settle slightly when pressed (they lift on hover already). */
+.project-card:active,
+.about-card:active,
+.skill-group:active,
+.exp-card:active {
+  transform: translateY(-1px) scale(0.994);
+  box-shadow: var(--shadow-rest);
+}
+
+/* Solid buttons get a material feel: top light-edge + grounded shadow. */
+.btn-primary,
+.btn-submit {
+  box-shadow: var(--shadow-rest), inset 0 1px 0 rgba(255,255,255,0.22);
+}
+.btn-primary:hover,
+.btn-submit:hover {
+  box-shadow: var(--shadow-lift), inset 0 1px 0 rgba(255,255,255,0.26);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:active, .btn-primary:active, .btn-submit:active, .testimonial-cta:active,
+  .contact-link:active, .project-card:active, .about-card:active,
+  .skill-group:active, .exp-card:active { transform: none; }
+}
+
+/* Material ripple — a circle that expands from the click point. */
+.btn,
+.btn-submit,
+.btn-resume,
+.btn-approve,
+.btn-delete,
+.testimonial-cta,
+.btn-ghost-sm {
+  position: relative;
+  overflow: hidden;
+}
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  pointer-events: none;
+  animation: ripple-expand 0.6s var(--ease-out);
+}
+@keyframes ripple-expand {
+  to { transform: scale(2.4); opacity: 0; }
+}
+
+/* ═══════════════════ SMOOTH SCROLL (Lenis) + SCRUB ═══════════════════ */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Hero elements are transformed every frame — hint the compositor. */
+.hero-content,
+.hero-image,
+[data-speed] { will-change: transform, opacity; }
+
+/* ═══════════════════ AVAILABLE-FOR-HIRE: BLINKING GREEN LIGHT ═══════════════════ */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e, 0 0 14px rgba(34, 197, 94, 0.65);
+  animation: statusBlink 1.4s ease-in-out infinite;
+}
+@keyframes statusBlink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 6px #22c55e, 0 0 14px rgba(34, 197, 94, 0.65);
+  }
+  50% {
+    opacity: 0.2;
+    box-shadow: 0 0 2px rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* ═══════════════════ HERO HEADLINE TYPING ═══════════════════ */
+/* typing.js adds .typewriter, so skip the slide-up fade — text appears as it types. */
+.hero h1.typewriter {
+  opacity: 1;
+  animation: none;
+}
+.type-caret {
+  display: inline-block;
+  width: 0.07em;
+  height: 0.85em;
+  margin-left: 0.06em;
+  vertical-align: -0.04em;
+  background: var(--accent2);
+  box-shadow: 0 0 10px var(--accent2);
+  animation: caretBlink 0.9s steps(1) infinite;
+}
+@keyframes caretBlink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
